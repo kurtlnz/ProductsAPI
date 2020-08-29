@@ -1,8 +1,12 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Collections.Generic;
+using System.Reflection;
+using AutoMapper;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using XeroTechnicalTest.Domain.Services;
 
 namespace XeroTechnicalTest
 {
@@ -18,6 +22,20 @@ namespace XeroTechnicalTest
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            
+            // var assemblies = new List<Assembly> { Assembly.Load("XeroTechnicalTest.API") };
+            // services.AddAutoMapper(_ => _.CreateMissingTypeMaps = true, assemblies);
+
+            services.AddScoped<IProductService, ProductService>();
+            
+            services.AddSwaggerDocument(config =>
+            {
+                config.PostProcess = document =>
+                {
+                    document.Info.Version = "v1";
+                    document.Info.Title = "XeroTechnicalTest.API";
+                };
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -28,13 +46,15 @@ namespace XeroTechnicalTest
             }
             else
             {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
             app.UseRouting();
             app.UseHttpsRedirection();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
         }
     }
 }

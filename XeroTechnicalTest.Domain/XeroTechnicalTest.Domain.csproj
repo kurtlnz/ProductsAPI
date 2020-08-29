@@ -5,11 +5,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Services" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.7" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.7" />
+      <Folder Include="Services\Product\DTO" />
     </ItemGroup>
 
 </Project>

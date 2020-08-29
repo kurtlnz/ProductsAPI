@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XeroTechnicalTest", "XeroTechnicalTest.csproj", "{529176B5-F038-4745-A9B8-E87E9D226F6C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XeroTechnicalTest.API", "XeroTechnicalTest.API\XeroTechnicalTest.API.csproj", "{529176B5-F038-4745-A9B8-E87E9D226F6C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XeroTechnicalTest.Domain", "XeroTechnicalTest.Domain\XeroTechnicalTest.Domain.csproj", "{F36F4F4D-A7DE-474B-9EB4-229019D77A87}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,5 +14,13 @@ Global
 		{529176B5-F038-4745-A9B8-E87E9D226F6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{529176B5-F038-4745-A9B8-E87E9D226F6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{529176B5-F038-4745-A9B8-E87E9D226F6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B029688A-F102-4F58-BBFB-CA23BAEC2EEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B029688A-F102-4F58-BBFB-CA23BAEC2EEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B029688A-F102-4F58-BBFB-CA23BAEC2EEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B029688A-F102-4F58-BBFB-CA23BAEC2EEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F36F4F4D-A7DE-474B-9EB4-229019D77A87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F36F4F4D-A7DE-474B-9EB4-229019D77A87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F36F4F4D-A7DE-474B-9EB4-229019D77A87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F36F4F4D-A7DE-474B-9EB4-229019D77A87}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

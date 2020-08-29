@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
+using XeroTechnicalTest.Domain.Models;
 using XeroTechnicalTest.Models;
 
 namespace XeroTechnicalTest.Controllers

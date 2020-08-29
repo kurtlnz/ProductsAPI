@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using XeroTechnicalTest.Models;
 
 namespace XeroTechnicalTest.Domain.Models
 {
@@ -20,19 +19,19 @@ namespace XeroTechnicalTest.Domain.Models
 
         private void LoadProductOptions(string where)
         {
-            Items = new List<ProductOption>();
-            var conn = Helpers.NewConnection();
-            conn.Open();
-            var cmd = conn.CreateCommand();
-
-            cmd.CommandText = $"select id from productoptions {where}";
-
-            var rdr = cmd.ExecuteReader();
-            while (rdr.Read())
-            {
-                var id = Guid.Parse(rdr.GetString(0));
-                Items.Add(new ProductOption()); //Items.Add(new ProductOption(id));
-            }
+            // Items = new List<ProductOption>();
+            // var conn = Helpers.NewConnection();
+            // conn.Open();
+            // var cmd = conn.CreateCommand();
+            //
+            // cmd.CommandText = $"select id from productoptions {where}";
+            //
+            // var rdr = cmd.ExecuteReader();
+            // while (rdr.Read())
+            // {
+            //     var id = Guid.Parse(rdr.GetString(0));
+            //     Items.Add(new ProductOption(id));
+            // }
         }
     }
 }

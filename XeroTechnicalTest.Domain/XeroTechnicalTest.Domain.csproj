@@ -9,11 +9,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.Data.Sqlite" Version="3.1.7" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\XeroTechnicalTest.API\XeroTechnicalTest.API.csproj" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.7" />
     </ItemGroup>
 
 </Project>

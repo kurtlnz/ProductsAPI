@@ -1,3 +1,10 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using XeroTechnicalTest.Domain.Models;
+using XeroTechnicalTest.Domain.Services.DTO;
+using XeroTechnicalTest.Domain.Services.ProductOption;
+
 namespace XeroTechnicalTest.Domain.Services
 {
     public interface IProductService
@@ -5,21 +12,51 @@ namespace XeroTechnicalTest.Domain.Services
         /// <summary>
         /// 
         /// </summary>
-        void CreateProduct();
+        Task CreateProductAsync(Product product);
         
         /// <summary>
         /// 
         /// </summary>
-        void GetProduct(Guid id);
+        Task<Product> GetProductAsync(Guid id);
         
         /// <summary>
         /// 
         /// </summary>
-        void UpdateProduct();
+        Task<List<Product>> GetAllProductsAsync(string name = null);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        Task UpdateProductAsync(Guid id, UpdateProduct dto);
 
         /// <summary>
         /// 
         /// </summary>
-        void DeleteProduct(Guid id);
+        Task DeleteProductAsync(Guid id);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        Task CreateProductOptionAsync(Guid productId, Models.ProductOption option);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        Task<Models.ProductOption> GetProductOptionAsync(Guid productId, Guid optionId);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        Task<List<Models.ProductOption>> GetAllProductOptionsAsync(Guid productId);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        Task UpdateProductOptionAsync(Guid id, Guid optionId, UpdateProductOption dto);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        Task DeleteProductOptionAsync(Guid id, Guid optionId);
     }
 }

@@ -9,6 +9,6 @@ namespace XeroTechnicalTest.Domain
         public DbSet<ProductOption> ProductOptions { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-            => optionsBuilder.UseSqlite("Data source=products.db");
+            => optionsBuilder.UseSqlite("Data source=App_Data/products.db");
     }
-}
+} 

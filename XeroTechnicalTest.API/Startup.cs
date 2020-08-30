@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Reflection;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using XeroTechnicalTest.Domain;
 using XeroTechnicalTest.Domain.Services;
 
 namespace XeroTechnicalTest
@@ -24,6 +23,8 @@ namespace XeroTechnicalTest
             services.AddMvc();
             
             services.AddAutoMapper(typeof(Startup));
+            
+            services.AddDbContext<DataContext>();
 
             services.AddScoped<IProductService, ProductService>();
             

@@ -23,8 +23,7 @@ namespace XeroTechnicalTest
         {
             services.AddMvc();
             
-            // var assemblies = new List<Assembly> { Assembly.Load("XeroTechnicalTest.API") };
-            // services.AddAutoMapper(_ => _.CreateMissingTypeMaps = true, assemblies);
+            services.AddAutoMapper(typeof(Startup));
 
             services.AddScoped<IProductService, ProductService>();
             

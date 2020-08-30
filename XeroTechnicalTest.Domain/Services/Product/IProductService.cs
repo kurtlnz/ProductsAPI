@@ -12,7 +12,7 @@ namespace XeroTechnicalTest.Domain.Services
         /// <summary>
         /// 
         /// </summary>
-        Task CreateProductAsync(Product product);
+        Task CreateProductAsync(CreateProduct dto);
         
         /// <summary>
         /// 

@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using XeroTechnicalTest.Domain.Exceptions;
 using XeroTechnicalTest.Domain.Models;
 using XeroTechnicalTest.Domain.Services.DTO;
 using XeroTechnicalTest.Domain.Services.ProductOption;
@@ -19,50 +21,56 @@ namespace XeroTechnicalTest.Domain.Services
         }
         
         #region Product
-        public async Task CreateProductAsync(Product product)
-        {
-            await _dataContext.Products.AddAsync(product);
-            await _dataContext.SaveChangesAsync();
-        }
-
         public async Task<Product> GetProductAsync(Guid id)
         {
-            return await _dataContext.Products.SingleOrDefaultAsync(_ => _.Id == id);
+            var product = await _dataContext.Products.SingleOrDefaultAsync(_ => _.Id == id);
+            if (product == null)
+                throw new ProductNotFoundException();
+            
+            return product;
         }
         
         public async Task<List<Product>> GetAllProductsAsync(string name = null)
         {
-            var query = _dataContext.Products
-                .AsQueryable();
-
+            var query = _dataContext.Products.AsQueryable();
             if (!string.IsNullOrEmpty(name))
-            {
                 query = query.Where(_ => _.Name == name);
-            }
                 
             return await query.ToListAsync();
+        }
+        
+        public async Task CreateProductAsync(CreateProduct dto)
+        {
+            var product = new Product()
+            {
+                Name = dto.Name,
+                Description = dto.Description,
+                Price = dto.Price,
+                DeliveryPrice = dto.DeliveryPrice
+            };
+            await _dataContext.Products.AddAsync(product);
+            await _dataContext.SaveChangesAsync();
         }
 
         public async Task UpdateProductAsync(Guid id, UpdateProduct dto)
         {
             var product = await _dataContext.Products.SingleOrDefaultAsync(_ => _.Id == id);
             if (product == null)
-                return;
+                throw new ProductNotFoundException();
 
             product.Name = dto.Name;
             product.Description = dto.Description;
-            product.Price = dto.DeliveryPrice;
+            product.Price = dto.Price;
             product.DeliveryPrice = dto.DeliveryPrice;
 
             await _dataContext.SaveChangesAsync();
-            
         }
 
         public async Task DeleteProductAsync(Guid id)
         {
             var product = await _dataContext.Products.SingleOrDefaultAsync(_ => _.Id == id);
             if (product == null)
-                return;
+                throw new ProductNotFoundException();
             
             _dataContext.Products.Remove(product);
             await _dataContext.SaveChangesAsync();

@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using XeroTechnicalTest.Domain.Exceptions;
 using XeroTechnicalTest.Domain.Models;
 using XeroTechnicalTest.Domain.Services;
 using XeroTechnicalTest.Domain.Services.DTO;
@@ -17,75 +19,107 @@ namespace XeroTechnicalTest.Endpoints.V1.Product
         private readonly IProductService _productService;
         private readonly IMapper _mapper;
 
-        public ProductsController(IProductService productService , IMapper mapper)
+        public ProductsController(IProductService productService, IMapper mapper)
         {
             _productService = productService ?? throw new ArgumentNullException(nameof(productService));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
         
+        #region Product
         // GET: /products
         [HttpGet]
-        [ProducesResponseType(typeof(ProductList), 200)]
+        [ProducesResponseType(typeof(ProductList), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetProducts()
         {
-            return Ok(await _productService.GetAllProductsAsync());
+            var result = await _productService.GetAllProductsAsync();
+            
+            return Ok(result);
         }
         
         // GET /products?name={name}
         [HttpGet("{name}")]
-        [ProducesResponseType(typeof(ProductList), 200)]
+        [ProducesResponseType(typeof(ProductList), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetProducts(string name)
         {
-            return Ok(await _productService.GetAllProductsAsync(name));
+            var result = await _productService.GetAllProductsAsync(name);
+            
+            return Ok(result);
         }
 
         // GET: /products/{id}
         [HttpGet("{id}")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetProduct(Guid id)
         {
-            var product = await _productService.GetProductAsync(id);
-            if (product == null)
+            try
+            {
+                var result = await _productService.GetProductAsync(id);
+                
+                return Ok(result);
+            }
+            catch (ProductNotFoundException)
+            {
                 return NotFound();
+            }
             
-            return Ok(product);
         }
 
         // POST: /products
         [HttpPost]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        public async Task<IActionResult> CreateProduct(Domain.Models.Product product)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> CreateProduct([FromBody] CreateProductRequest request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
 
-            await _productService.CreateProductAsync(product);
+            var dto = _mapper.Map<CreateProduct>(request);
+            await _productService.CreateProductAsync(dto);
             
             return Ok();
         }
 
         // PUT: /products/{id}
         [HttpPut("{id}")]
-        [ProducesResponseType(200)]
-        public async Task<IActionResult> Update(Guid id, UpdateRequest request)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Update(Guid id, UpdateProductRequest request)
         {
-            var dto = _mapper.Map<UpdateProduct>(request);
-            await _productService.UpdateProductAsync(id, dto);
+            try
+            {
+                var dto = _mapper.Map<UpdateProduct>(request);
+                await _productService.UpdateProductAsync(id, dto);
 
-            return Ok();
+                return Ok();
+            }
+            catch (ProductNotFoundException)
+            {
+                return NotFound();
+            }
         }
 
         // DELETE: /products/{id}
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(Guid id)
         {
-            await _productService.DeleteProductAsync(id);
-            return Ok();
+            try
+            {
+                await _productService.DeleteProductAsync(id);
+
+                return Ok();
+            }
+            catch (ProductNotFoundException)
+            {
+                return NotFound();
+            }
         }
+        
+        #endregion
 
         // GET /products/{id}/options
         [HttpGet("{id}/options")]

@@ -115,7 +115,7 @@ namespace XeroTechnicalTest.Endpoints.V1.Product
 
         // GET /products/{id}/options
         [HttpGet("{id}/options")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProductOptions), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetOptions(Guid id)
         {

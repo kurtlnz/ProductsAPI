@@ -34,6 +34,12 @@ namespace XeroTechnicalTest
                 {
                     document.Info.Version = "v1";
                     document.Info.Title = "XeroTechnicalTest.API";
+                    document.Info.Description = "Welcome to Kurt's Products API! I hope you enjoy your stay :)";
+                    document.Info.Contact = new NSwag.OpenApiContact
+                    {
+                        Name = "Kurt Lim",
+                        Email = "klim049@gmail.com",
+                    };
                 };
             });
         }
@@ -51,7 +57,10 @@ namespace XeroTechnicalTest
 
             app.UseRouting();
             app.UseHttpsRedirection();
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
             
             app.UseOpenApi();
             app.UseSwaggerUi3();

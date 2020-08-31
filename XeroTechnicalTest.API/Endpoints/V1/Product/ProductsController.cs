@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
@@ -8,7 +7,7 @@ using XeroTechnicalTest.Domain.Exceptions;
 using XeroTechnicalTest.Domain.Models;
 using XeroTechnicalTest.Domain.Services;
 using XeroTechnicalTest.Domain.Services.DTO;
-using XeroTechnicalTest.Domain.Services.ProductOption;
+using XeroTechnicalTest.Domain.Services.Product.DTO;
 
 namespace XeroTechnicalTest.Endpoints.V1.Product
 {
@@ -26,20 +25,11 @@ namespace XeroTechnicalTest.Endpoints.V1.Product
         }
         
         #region Product
-        // GET: /products
-        [HttpGet]
-        [ProducesResponseType(typeof(ProductList), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetProducts()
-        {
-            var result = await _productService.GetAllProductsAsync();
-            
-            return Ok(result);
-        }
         
         // GET /products?name={name}
-        [HttpGet("{name}")]
-        [ProducesResponseType(typeof(ProductList), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetProducts(string name)
+        [HttpGet]
+        [ProducesResponseType(typeof(Products), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetProducts([FromQuery] string name)
         {
             var result = await _productService.GetAllProductsAsync(name);
             
@@ -77,6 +67,7 @@ namespace XeroTechnicalTest.Endpoints.V1.Product
             }
 
             var dto = _mapper.Map<CreateProduct>(request);
+            
             await _productService.CreateProductAsync(dto);
             
             return Ok();
@@ -86,11 +77,12 @@ namespace XeroTechnicalTest.Endpoints.V1.Product
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Update(Guid id, UpdateProductRequest request)
+        public async Task<IActionResult> UpdateProduct(Guid id, [FromBody] UpdateProductRequest request)
         {
             try
             {
                 var dto = _mapper.Map<UpdateProduct>(request);
+                
                 await _productService.UpdateProductAsync(id, dto);
 
                 return Ok();
@@ -105,7 +97,7 @@ namespace XeroTechnicalTest.Endpoints.V1.Product
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult> DeleteProduct(Guid id)
         {
             try
             {
@@ -123,49 +115,94 @@ namespace XeroTechnicalTest.Endpoints.V1.Product
 
         // GET /products/{id}/options
         [HttpGet("{id}/options")]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetOptions(Guid id)
         {
-            return Ok(await _productService.GetAllProductOptionsAsync(id));
+            try
+            {
+                var result = await _productService.GetAllProductOptionsAsync(id);
+
+                return Ok(result);
+            }
+            catch (ProductNotFoundException)
+            {
+                return NotFound();
+            }
         }
 
         // GET: /products/{id}/options/{optionId}
         [HttpGet("{id}/options/{optionId}")]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetOption(Guid id, Guid optionId)
         {
-            return Ok(await _productService.GetProductOptionAsync(id, optionId));
+            try
+            {
+                var result = await _productService.GetProductOptionAsync(id, optionId);
+
+                return Ok(result);
+            }
+            catch (ProductOptionNotFoundException)
+            {
+                return NotFound();
+            }
         }
 
         // POST: /products/{id}/options
         [HttpPost("{id}/options")]
-        [ProducesResponseType(200)]
-        public async Task<IActionResult> CreateOption(Guid productId, ProductOption option)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> CreateOption(Guid id, CreateOptionRequest request)
         {
-            await _productService.CreateProductOptionAsync(productId, option);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var dto = _mapper.Map<CreateProductOption>(request);
+            
+            await _productService.CreateProductOptionAsync(id, dto);
             
             return Ok();
         }
 
         // PUT: /products/{id}/options/{optionId}
         [HttpPut("{id}/options/{optionId}")]
-        [ProducesResponseType(200)]
-        public async Task<IActionResult> UpdateOption(Guid id, Guid optionId, ProductOption option)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UpdateOption(Guid id, Guid optionId, UpdateOptionRequest request)
         {
-            var dto = _mapper.Map<UpdateProductOption>(option);
-            await _productService.UpdateProductOptionAsync(id, optionId, dto);
+            try
+            {
+                var dto = _mapper.Map<UpdateProductOption>(request);
+                
+                await _productService.UpdateProductOptionAsync(id, optionId, dto);
 
-            return Ok();
+                return Ok();
+            }
+            catch (ProductOptionNotFoundException)
+            {
+                return NotFound();
+            }
         }
 
         // DELETE: /products/{id}/options/{optionId}
         [HttpDelete("{id}/options/{optionId}")]
         [ProducesResponseType(200)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteOption(Guid id, Guid optionId)
         {
-            await _productService.DeleteProductOptionAsync(id, optionId);
+            try
+            {
+                await _productService.DeleteProductOptionAsync(id, optionId);
 
-            return Ok();
+                return Ok();
+            }
+            catch (ProductNotFoundException)
+            {
+                return NotFound();
+            }
         }
     }
 }

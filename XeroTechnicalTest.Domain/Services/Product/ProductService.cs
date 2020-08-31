@@ -2,12 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using XeroTechnicalTest.Domain.Exceptions;
 using XeroTechnicalTest.Domain.Models;
 using XeroTechnicalTest.Domain.Services.DTO;
-using XeroTechnicalTest.Domain.Services.ProductOption;
+using XeroTechnicalTest.Domain.Services.Product.DTO;
 
 namespace XeroTechnicalTest.Domain.Services
 {
@@ -20,28 +19,32 @@ namespace XeroTechnicalTest.Domain.Services
             _dataContext = dataContext;
         }
         
-        #region Product
-        public async Task<Product> GetProductAsync(Guid id)
+        #region Products
+        public async Task<Models.Product> GetProductAsync(Guid id)
         {
             var product = await _dataContext.Products.SingleOrDefaultAsync(_ => _.Id == id);
+            
             if (product == null)
                 throw new ProductNotFoundException();
             
             return product;
         }
         
-        public async Task<List<Product>> GetAllProductsAsync(string name = null)
+        public async Task<List<Models.Product>> GetAllProductsAsync(string name)
         {
             var query = _dataContext.Products.AsQueryable();
+
             if (!string.IsNullOrEmpty(name))
-                query = query.Where(_ => _.Name == name);
-                
+            {
+                query = query.Where(_ => _.Name == name);    
+            }
+            
             return await query.ToListAsync();
         }
         
         public async Task CreateProductAsync(CreateProduct dto)
         {
-            var product = new Product()
+            var product = new Models.Product()
             {
                 Name = dto.Name,
                 Description = dto.Description,
@@ -49,12 +52,13 @@ namespace XeroTechnicalTest.Domain.Services
                 DeliveryPrice = dto.DeliveryPrice
             };
             await _dataContext.Products.AddAsync(product);
-            await _dataContext.SaveChangesAsync();
+            var b = await _dataContext.SaveChangesAsync();
         }
 
         public async Task UpdateProductAsync(Guid id, UpdateProduct dto)
         {
             var product = await _dataContext.Products.SingleOrDefaultAsync(_ => _.Id == id);
+            
             if (product == null)
                 throw new ProductNotFoundException();
 
@@ -69,6 +73,7 @@ namespace XeroTechnicalTest.Domain.Services
         public async Task DeleteProductAsync(Guid id)
         {
             var product = await _dataContext.Products.SingleOrDefaultAsync(_ => _.Id == id);
+            
             if (product == null)
                 throw new ProductNotFoundException();
             
@@ -79,45 +84,63 @@ namespace XeroTechnicalTest.Domain.Services
         #endregion
         
         #region ProductOptions
-        
-        public async Task CreateProductOptionAsync(Guid productId, Models.ProductOption option)
+
+        public async Task<ProductOption> GetProductOptionAsync(Guid productId, Guid optionId)
         {
+            var productOption = await _dataContext.ProductOptions
+                .SingleOrDefaultAsync(_ => _.ProductId == productId && _.Id == optionId);
+            
+            if (productOption == null)
+                throw new ProductOptionNotFoundException();
+                
+            return productOption;
+        }
+        
+        public async Task<List<ProductOption>> GetAllProductOptionsAsync(Guid productId)
+        {
+            var product = await _dataContext.Products
+                .Include(_ => _.Options)
+                .SingleOrDefaultAsync(_ => _.Id == productId);
+            
+            if (product == null)
+                throw new ProductNotFoundException();
+            
+            return product.Options.ToList();
+        }
+        
+        public async Task CreateProductOptionAsync(Guid productId, CreateProductOption dto)
+        {
+            var option = new ProductOption()
+            {
+                ProductId = productId,
+                Name = dto.Name,
+                Description = dto.Description
+            };
             await _dataContext.ProductOptions.AddAsync(option);
             await _dataContext.SaveChangesAsync();
         }
 
-        public async Task<Models.ProductOption> GetProductOptionAsync(Guid productId, Guid optionId)
-        {
-            return await _dataContext.ProductOptions.SingleOrDefaultAsync(_ => _.ProductId == productId && _.Id == optionId);
-        }
-        
-        public async Task<List<Models.ProductOption>> GetAllProductOptionsAsync(Guid productId)
-        {
-            return await _dataContext.ProductOptions
-                .Where(_ => _.ProductId == productId)
-                .ToListAsync();
-        }
-
-        public async Task UpdateProductOptionAsync(Guid id, Guid optionId, UpdateProductOption dto)
+        public async Task UpdateProductOptionAsync(Guid productId, Guid optionId, UpdateProductOption dto)
         {
             var option = await _dataContext.ProductOptions
-                .SingleOrDefaultAsync(_ => _.ProductId == id && _.Id == optionId);
+                .SingleOrDefaultAsync(_ => _.ProductId == productId && _.Id == optionId);
+            
             if (option == null)
-                return;
+                throw new ProductOptionNotFoundException();
 
             option.Name = dto.Name;
             option.Description = dto.Description;
 
             await _dataContext.SaveChangesAsync();
-            
         }
 
-        public async Task DeleteProductOptionAsync(Guid id, Guid optionId)
+        public async Task DeleteProductOptionAsync(Guid productId, Guid optionId)
         {
             var option = await _dataContext.ProductOptions
-                .SingleOrDefaultAsync(_ => _.ProductId == id && _.Id == optionId);
+                .SingleOrDefaultAsync(_ => _.ProductId == productId && _.Id == optionId);
+            
             if (option == null)
-                return;
+                throw new ProductOptionNotFoundException();
             
             _dataContext.ProductOptions.Remove(option);
             await _dataContext.SaveChangesAsync();

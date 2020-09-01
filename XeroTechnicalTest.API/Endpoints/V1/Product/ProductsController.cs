@@ -28,12 +28,13 @@ namespace XeroTechnicalTest.Endpoints.V1.Product
         
         // GET /products?name={name}
         [HttpGet]
-        [ProducesResponseType(typeof(Products), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GetProductsResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetProducts([FromQuery] string name)
         {
             var result = await _productService.GetAllProductsAsync(name);
             
-            return Ok(result);
+            return Ok( new GetProductsResponse { Items = result });
+            
         }
 
         // GET: /products/{id}
@@ -45,12 +46,12 @@ namespace XeroTechnicalTest.Endpoints.V1.Product
             try
             {
                 var result = await _productService.GetProductAsync(id);
-                
+
                 return Ok(result);
             }
-            catch (ProductNotFoundException)
+            catch (ProductNotFoundException ex)
             {
-                return NotFound();
+                return NotFound( new V1Response { Message = ex.Message });
             }
             
         }
@@ -77,7 +78,7 @@ namespace XeroTechnicalTest.Endpoints.V1.Product
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdateProduct(Guid id, [FromBody] UpdateProductRequest request)
+        public async Task<IActionResult> UpdateProduct([FromRoute] Guid id, [FromBody] UpdateProductRequest request)
         {
             try
             {
@@ -87,9 +88,9 @@ namespace XeroTechnicalTest.Endpoints.V1.Product
 
                 return Ok();
             }
-            catch (ProductNotFoundException)
+            catch (ProductNotFoundException ex)
             {
-                return NotFound();
+                return NotFound( new V1Response { Message = ex.Message });
             }
         }
 
@@ -105,9 +106,9 @@ namespace XeroTechnicalTest.Endpoints.V1.Product
 
                 return Ok();
             }
-            catch (ProductNotFoundException)
+            catch (ProductNotFoundException ex)
             {
-                return NotFound();
+                return NotFound( new V1Response { Message = ex.Message });
             }
         }
         
@@ -115,7 +116,7 @@ namespace XeroTechnicalTest.Endpoints.V1.Product
 
         // GET /products/{id}/options
         [HttpGet("{id}/options")]
-        [ProducesResponseType(typeof(ProductOptions), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GetProductOptionsResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetOptions(Guid id)
         {
@@ -123,11 +124,11 @@ namespace XeroTechnicalTest.Endpoints.V1.Product
             {
                 var result = await _productService.GetAllProductOptionsAsync(id);
 
-                return Ok(result);
+                return Ok( new GetProductOptionsResponse { Items = result });
             }
-            catch (ProductNotFoundException)
+            catch (ProductNotFoundException ex)
             {
-                return NotFound();
+                return NotFound( new V1Response { Message = ex.Message } );
             }
         }
 
@@ -143,9 +144,9 @@ namespace XeroTechnicalTest.Endpoints.V1.Product
 
                 return Ok(result);
             }
-            catch (ProductOptionNotFoundException)
+            catch (ProductOptionNotFoundException ex)
             {
-                return NotFound();
+                return NotFound( new V1Response { Message = ex.Message } );
             }
         }
 
@@ -181,9 +182,9 @@ namespace XeroTechnicalTest.Endpoints.V1.Product
 
                 return Ok();
             }
-            catch (ProductOptionNotFoundException)
+            catch (ProductOptionNotFoundException ex)
             {
-                return NotFound();
+                return NotFound( new V1Response { Message = ex.Message } );
             }
         }
 
@@ -199,9 +200,9 @@ namespace XeroTechnicalTest.Endpoints.V1.Product
 
                 return Ok();
             }
-            catch (ProductNotFoundException)
+            catch (ProductNotFoundException ex)
             {
-                return NotFound();
+                return NotFound( new V1Response { Message = ex.Message } );
             }
         }
     }

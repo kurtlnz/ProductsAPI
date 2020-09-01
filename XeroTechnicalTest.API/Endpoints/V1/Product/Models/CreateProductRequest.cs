@@ -9,10 +9,8 @@ namespace XeroTechnicalTest.Endpoints.V1.Product
 
         public string Description { get; set; }
 
-        [Required]
         public decimal Price { get; set; }
 
-        [Required]
         public decimal DeliveryPrice { get; set; }
     }
 }

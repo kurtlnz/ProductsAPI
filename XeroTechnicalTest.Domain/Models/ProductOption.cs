@@ -15,9 +15,4 @@ namespace XeroTechnicalTest.Domain.Models
         public string Description { get; set; }
 
     }
-    
-    public class ProductOptions
-    {
-        public List<Product> Items { get; set; }
-    }
 }

@@ -25,7 +25,7 @@ namespace XeroTechnicalTest.Domain.Services
             var product = await _dataContext.Products.SingleOrDefaultAsync(_ => _.Id == id);
             
             if (product == null)
-                throw new ProductNotFoundException();
+                throw new ProductNotFoundException($"Could not find product with id '{id}'.");
             
             return product;
         }
@@ -52,7 +52,7 @@ namespace XeroTechnicalTest.Domain.Services
                 DeliveryPrice = dto.DeliveryPrice
             };
             await _dataContext.Products.AddAsync(product);
-            var b = await _dataContext.SaveChangesAsync();
+            await _dataContext.SaveChangesAsync();
         }
 
         public async Task UpdateProductAsync(Guid id, UpdateProduct dto)
@@ -60,14 +60,23 @@ namespace XeroTechnicalTest.Domain.Services
             var product = await _dataContext.Products.SingleOrDefaultAsync(_ => _.Id == id);
             
             if (product == null)
-                throw new ProductNotFoundException();
+                throw new ProductNotFoundException($"Could not find product with id '{id}'.");
 
-            product.Name = dto.Name;
-            product.Description = dto.Description;
-            product.Price = dto.Price;
-            product.DeliveryPrice = dto.DeliveryPrice;
+            HandleProductUpdate(product, dto);
 
             await _dataContext.SaveChangesAsync();
+        }
+
+        private void HandleProductUpdate(Models.Product product, UpdateProduct dto)
+        {
+            if (!string.IsNullOrWhiteSpace(dto.Name)) 
+                product.Name = dto.Name;
+            if (!string.IsNullOrWhiteSpace(dto.Description)) 
+                product.Description = dto.Description;
+            if (dto.Price != null) 
+                product.Price = dto.Price.Value;
+            if (dto.DeliveryPrice != null) 
+                product.DeliveryPrice = dto.DeliveryPrice.Value;
         }
 
         public async Task DeleteProductAsync(Guid id)
@@ -75,7 +84,7 @@ namespace XeroTechnicalTest.Domain.Services
             var product = await _dataContext.Products.SingleOrDefaultAsync(_ => _.Id == id);
             
             if (product == null)
-                throw new ProductNotFoundException();
+                throw new ProductNotFoundException($"Could not find product with id '{id}'.");
             
             _dataContext.Products.Remove(product);
             await _dataContext.SaveChangesAsync();
@@ -91,7 +100,7 @@ namespace XeroTechnicalTest.Domain.Services
                 .SingleOrDefaultAsync(_ => _.ProductId == productId && _.Id == optionId);
             
             if (productOption == null)
-                throw new ProductOptionNotFoundException();
+                throw new ProductOptionNotFoundException($"Could not find option with productId '{productId}' and optionId '{optionId}'.");
                 
             return productOption;
         }
@@ -103,7 +112,7 @@ namespace XeroTechnicalTest.Domain.Services
                 .SingleOrDefaultAsync(_ => _.Id == productId);
             
             if (product == null)
-                throw new ProductNotFoundException();
+                throw new ProductNotFoundException($"Could not find product with id '{productId}'.");
             
             return product.Options.ToList();
         }
@@ -126,12 +135,19 @@ namespace XeroTechnicalTest.Domain.Services
                 .SingleOrDefaultAsync(_ => _.ProductId == productId && _.Id == optionId);
             
             if (option == null)
-                throw new ProductOptionNotFoundException();
+                throw new ProductOptionNotFoundException($"Could not find option with productId '{productId}' and optionId '{optionId}'.");
 
-            option.Name = dto.Name;
-            option.Description = dto.Description;
+            HandleProductOptionUpdate(option, dto);
 
             await _dataContext.SaveChangesAsync();
+        }
+
+        private void HandleProductOptionUpdate(ProductOption option, UpdateProductOption dto)
+        {
+            if (!string.IsNullOrWhiteSpace(dto.Name)) 
+                option.Name = dto.Name;
+            if (!string.IsNullOrWhiteSpace(dto.Description)) 
+                option.Description = dto.Description;
         }
 
         public async Task DeleteProductOptionAsync(Guid productId, Guid optionId)
@@ -140,7 +156,7 @@ namespace XeroTechnicalTest.Domain.Services
                 .SingleOrDefaultAsync(_ => _.ProductId == productId && _.Id == optionId);
             
             if (option == null)
-                throw new ProductOptionNotFoundException();
+                throw new ProductOptionNotFoundException($"Could not find option with productId '{productId}' and optionId '{optionId}'");
             
             _dataContext.ProductOptions.Remove(option);
             await _dataContext.SaveChangesAsync();

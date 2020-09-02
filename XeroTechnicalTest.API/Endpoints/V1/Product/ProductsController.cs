@@ -4,7 +4,6 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using XeroTechnicalTest.Domain.Exceptions;
-using XeroTechnicalTest.Domain.Models;
 using XeroTechnicalTest.Domain.Services;
 using XeroTechnicalTest.Domain.Services.DTO;
 using XeroTechnicalTest.Domain.Services.Product.DTO;
@@ -114,6 +113,8 @@ namespace XeroTechnicalTest.Endpoints.V1.Product
         
         #endregion
 
+        #region ProductOptions
+        
         // GET /products/{id}/options
         [HttpGet("{id}/options")]
         [ProducesResponseType(typeof(GetProductOptionsResponse), StatusCodes.Status200OK)]
@@ -205,5 +206,7 @@ namespace XeroTechnicalTest.Endpoints.V1.Product
                 return NotFound( new V1Response { Message = ex.Message } );
             }
         }
+        
+        #endregion
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace XeroTechnicalTest.Domain.Models
 {
@@ -12,6 +13,7 @@ namespace XeroTechnicalTest.Domain.Models
 
         public decimal DeliveryPrice { get; set; }
 
+        [JsonIgnore]
         public ICollection<ProductOption> Options { get; set; }
         
     }

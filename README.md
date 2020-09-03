@@ -1,9 +1,9 @@
-# Products API - V2
+# Xero Products API - V2
 
-This was a challenge to evaluate and re-factor an existing .NET Web API for managing products and their options in C#. 
+The challenge was to evaluate and re-factor an existing .NET Web API for managing products and their options in C#. 
 
-- V1 was the existing API.
-- V2 is the refactored result.
+The existing project has been converted to target .Net Core 3.1 with the existing data access methods moved out of
+the models in favour of a service layer utilizing EF Core.
 
 ## Technologies used:
 
@@ -16,8 +16,9 @@ This was a challenge to evaluate and re-factor an existing .NET Web API for mana
 ## Running the API:
 
 1. Open or unzip the solution into a chosen directory
-2. cd XeroTechnicalTest.API
-3. dotnet run
+2. Open Terminal
+3. Navigate to the XeroTechnicalTest.API project
+3. Execute `dotnet run`
 
 The API should now be running! 
 
@@ -26,14 +27,17 @@ Optionally navigate to https://localhost:5001/swagger/index.html to view the API
 ## Database
 
 - Sqlite
-- Contains dummy data
 - Location: XeroTechnicalTest.API/App_Data/products.db
 
 Generating an empty database from the solution root: 
-  ```
-  dotnet ef database update --project XeroTechnicalTest.Domain --startup-project XeroTechnicalTest.API
-  ```
+```
+dotnet ef database update --project XeroTechnicalTest.Domain --startup-project XeroTechnicalTest.API
+```
 
+
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # refactor-this
 The attached project is a poorly written products API in C#.

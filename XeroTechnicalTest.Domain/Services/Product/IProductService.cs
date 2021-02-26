@@ -29,7 +29,7 @@ namespace XeroTechnicalTest.Domain.Services
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        Task CreateProductAsync(CreateProduct dto);
+        Task<bool> CreateProductAsync(CreateProduct dto);
 
         /// <summary>
         /// Update values on existing product in db.
@@ -37,14 +37,14 @@ namespace XeroTechnicalTest.Domain.Services
         /// <param name="id"></param>
         /// <param name="dto"></param>
         /// <returns></returns>
-        Task UpdateProductAsync(Guid id, UpdateProduct dto);
+        Task<bool> UpdateProductAsync(Guid id, UpdateProduct dto);
 
         /// <summary>
         /// Delete product from db.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task DeleteProductAsync(Guid id);
+        Task<bool> DeleteProductAsync(Guid id);
         
         /// <summary>
         /// Get product option matching productId and optionId.
@@ -67,7 +67,7 @@ namespace XeroTechnicalTest.Domain.Services
         /// <param name="productId"></param>
         /// <param name="dto"></param>
         /// <returns></returns>
-        Task CreateProductOptionAsync(Guid productId, CreateProductOption dto);
+        Task<bool> CreateProductOptionAsync(Guid productId, CreateProductOption dto);
         
         /// <summary>
         /// Update values on product option matching productId and optionId.
@@ -76,7 +76,7 @@ namespace XeroTechnicalTest.Domain.Services
         /// <param name="optionId"></param>
         /// <param name="dto"></param>
         /// <returns></returns>
-        Task UpdateProductOptionAsync(Guid productId, Guid optionId, UpdateProductOption dto);
+        Task<bool> UpdateProductOptionAsync(Guid productId, Guid optionId, UpdateProductOption dto);
 
         /// <summary>
         /// Delete product option from product matching optionId
@@ -84,6 +84,6 @@ namespace XeroTechnicalTest.Domain.Services
         /// <param name="productId"></param>
         /// <param name="optionId"></param>
         /// <returns></returns>
-        Task DeleteProductOptionAsync(Guid productId, Guid optionId);
+        Task<bool> DeleteProductOptionAsync(Guid productId, Guid optionId);
     }
 }

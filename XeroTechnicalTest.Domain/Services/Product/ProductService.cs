@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using XeroTechnicalTest.Domain.Exceptions;
 using XeroTechnicalTest.Domain.Models;
 using XeroTechnicalTest.Domain.Services.DTO;
 using XeroTechnicalTest.Domain.Services.Product.DTO;
@@ -70,7 +71,7 @@ namespace XeroTechnicalTest.Domain.Services
             
             var success = await _productRepository.CreateProductAsync(product);
             if (!success)
-                _logger.LogInformation($"Failed to create product.");
+                _logger.LogWarning($"Failed to create product.");
 
             return success;
         }
@@ -78,14 +79,13 @@ namespace XeroTechnicalTest.Domain.Services
         public async Task<bool> UpdateProductAsync(Guid id, UpdateProduct dto)
         {
             _logger.LogInformation($"Updating product with id `{id}`");
-            
-            var product = await _dataContext.Products.SingleOrDefaultAsync(_ => _.Id == id);
 
+            var product = _productRepository.GetProductAsync(id);
             if (product == null)
             {
-                _logger.LogInformation($"Could not find product with id `{id}`.");
-                
-                return false;
+                var message = $"Could not find product with id `{id}`.";
+                _logger.LogInformation(message);
+                throw new ProductNotFoundException(message);
             }
 
             var success = await _productRepository.UpdateProductAsync(new Models.Product
@@ -98,7 +98,7 @@ namespace XeroTechnicalTest.Domain.Services
             });
             
             if (!success)
-                _logger.LogInformation($"Failed to update product with id `{id}`.");
+                _logger.LogWarning($"Failed to update product with id `{id}`.");
             
             return success;
         }
@@ -106,10 +106,18 @@ namespace XeroTechnicalTest.Domain.Services
         public async Task<bool> DeleteProductAsync(Guid id)
         {
             _logger.LogInformation($"Deleting product with id `{id}`");
+
+            var product = _productRepository.GetProductAsync(id);
+            if (product == null)
+            {
+                var message = $"Could not find product with id `{id}`.";
+                _logger.LogInformation(message);
+                throw new ProductNotFoundException(message);
+            }
             
             var success = await _productRepository.DeleteProductAsync(id);
             if (!success)
-                _logger.LogInformation($"Could not find product with id `{id}`.");
+                _logger.LogWarning($"Failed to delete product with id `{id}`.");
             
             return success;
         }
@@ -146,6 +154,14 @@ namespace XeroTechnicalTest.Domain.Services
             // TODO: serialize product option
             _logger.LogInformation($"Creating option for product with id `{productId}`");
 
+            var product = _productRepository.GetProductAsync(productId);
+            if (product == null)
+            {
+                var message = $"Could not find product with id `{productId}`.";
+                _logger.LogInformation(message);
+                throw new ProductNotFoundException(message);
+            }
+            
             var option = new ProductOption()
             {
                 ProductId = productId,
@@ -155,7 +171,7 @@ namespace XeroTechnicalTest.Domain.Services
 
             var success = await _productRepository.CreateProductOptionAsync(option);
             if (!success)
-                _logger.LogInformation($"Failed to create option on product with id `{productId}`.");
+                _logger.LogWarning($"Failed to create option on product with id `{productId}`.");
                 
             return success;
         }
@@ -163,8 +179,16 @@ namespace XeroTechnicalTest.Domain.Services
         public async Task<bool> UpdateProductOptionAsync(Guid productId, Guid optionId, UpdateProductOption dto)
         {
             _logger.LogInformation($"Updating product option for product with id `{productId}` and option id `{optionId}`");
+            
+            var option = await _productRepository.GetProductOptionAsync(productId, optionId);
+            if (option == null)
+            {
+                var message = $"Could not find option with id `{optionId}` on product with id `{productId}`.";
+                _logger.LogInformation(message);
+                throw new ProductOptionNotFoundException(message);
+            }
 
-            var option = new ProductOption()
+            option = new ProductOption()
             {
                 Id = optionId,
                 ProductId = productId,
@@ -174,7 +198,7 @@ namespace XeroTechnicalTest.Domain.Services
             
             var success = await _productRepository.UpdateProductOptionAsync(option);
             if (!success)
-                _logger.LogInformation($"Failed to update option with id `{optionId}` on productId `{productId}`.");
+                _logger.LogWarning($"Failed to update option with id `{optionId}` on productId `{productId}`.");
 
             return success;
         }
@@ -186,13 +210,14 @@ namespace XeroTechnicalTest.Domain.Services
             var option = await _productRepository.GetProductOptionAsync(productId, optionId);
             if (option == null)
             {
-                _logger.LogInformation($"Could not find option with productId '{productId}' and optionId '{optionId}'");
-                return false;
+                var message = $"Could not find option with id `{optionId}` on product with id `{productId}`.";
+                _logger.LogInformation(message);
+                throw new ProductOptionNotFoundException(message);
             }
 
             var success = await _productRepository.DeleteProductOptionAsync(optionId);
             if (!success)
-                _logger.LogInformation($"Failed to delete option with id `{optionId}` on productId `{productId}`.");
+                _logger.LogWarning($"Failed to delete option with id `{optionId}` on productId `{productId}`.");
             
             return success;
         }

@@ -169,9 +169,16 @@ namespace XeroTechnicalTest.Controllers
                 return BadRequest();
             }
             
-            var success = await _productService.CreateProductOptionAsync(id, request);
-            
-            return Ok(success);
+            try
+            {
+                var success = await _productService.CreateProductOptionAsync(id, request);
+                
+                return Ok(success);
+            }
+            catch (ProductNotFoundException ex)
+            {
+                return NotFound();
+            }
         }
 
         [HttpPut("{id}/options/{optionId}")]
@@ -206,7 +213,7 @@ namespace XeroTechnicalTest.Controllers
 
                 return Ok(success);
             }
-            catch (ProductNotFoundException ex)
+            catch (ProductOptionNotFoundException ex)
             {
                 return NotFound();
             }

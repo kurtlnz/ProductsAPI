@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using XeroTechnicalTest.Domain;
 using XeroTechnicalTest.Domain.Services;
+using XeroTechnicalTest.Persistence.Repositories;
 
 namespace XeroTechnicalTest
 {
@@ -27,6 +28,7 @@ namespace XeroTechnicalTest
             services.AddDbContext<DataContext>();
 
             services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IProductRepository, ProductRepository>();
             
             services.AddSwaggerDocument(config =>
             {
@@ -34,7 +36,6 @@ namespace XeroTechnicalTest
                 {
                     document.Info.Version = "v1";
                     document.Info.Title = "XeroTechnicalTest.API";
-                    document.Info.Description = "Welcome to Kurt's Products API! I hope you enjoy your stay :)";
                     document.Info.Contact = new NSwag.OpenApiContact
                     {
                         Name = "Kurt Lim",

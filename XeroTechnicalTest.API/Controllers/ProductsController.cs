@@ -195,7 +195,7 @@ namespace XeroTechnicalTest.Controllers
                 var dto = _mapper.Map<UpdateProductOption>(request);
                 
                 await _productService.UpdateProductOptionAsync(id, optionId, dto);
-
+                
                 return Ok();
             }
             catch (ProductOptionNotFoundException ex)
@@ -224,4 +224,5 @@ namespace XeroTechnicalTest.Controllers
         }
         
         #endregion
+    }
 }

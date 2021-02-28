@@ -23,6 +23,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\XeroTechnicalTest.Domain\XeroTechnicalTest.Domain.csproj" />
+      <ProjectReference Include="..\XeroTechnicalTest.Persistence\XeroTechnicalTest.Persistence.csproj" />
     </ItemGroup>
 
     <ItemGroup>

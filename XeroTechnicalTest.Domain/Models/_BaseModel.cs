@@ -9,5 +9,8 @@ namespace XeroTechnicalTest.Domain.Models
         
         [JsonIgnore]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        
+        [JsonIgnore]
+        public DateTime UpdatedAt { get; set; }
     }
 }

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using XeroTechnicalTest.Domain.Exceptions;
 using XeroTechnicalTest.Domain.Models;
@@ -13,13 +12,11 @@ namespace XeroTechnicalTest.Domain.Services
 {
     public class ProductService : IProductService
     {
-        private readonly DataContext _dataContext;
         private readonly ILogger<ProductService> _logger;
         private readonly IProductRepository _productRepository;
 
-        public ProductService(DataContext dataContext, ILogger<ProductService> logger)
+        public ProductService(ILogger<ProductService> logger)
         {
-            _dataContext = dataContext;
             _logger = logger;
         }
         
@@ -69,7 +66,7 @@ namespace XeroTechnicalTest.Domain.Services
                 DeliveryPrice = dto.DeliveryPrice
             };
             
-            var success = await _productRepository.CreateProductAsync(product);
+            var success = await _productRepository.CreateProductAsync(dto.ToProduct());
             if (!success)
                 _logger.LogWarning($"Failed to create product.");
 

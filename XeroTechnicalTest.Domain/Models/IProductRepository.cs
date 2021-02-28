@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using XeroTechnicalTest.Domain.Models;
-using XeroTechnicalTest.Domain.Services.DTO;
-using XeroTechnicalTest.Domain.Services.Product.DTO;
 
 namespace XeroTechnicalTest.Persistence.Repositories
 {

@@ -6,8 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using XeroTechnicalTest.Domain;
 using XeroTechnicalTest.Domain.Models;
-using XeroTechnicalTest.Domain.Services.DTO;
-using XeroTechnicalTest.Domain.Services.Product.DTO;
 
 namespace XeroTechnicalTest.Persistence.Repositories
 {
@@ -40,7 +38,7 @@ namespace XeroTechnicalTest.Persistence.Repositories
             return product;
         }
 
-        public async Task<List<Product>> GetAllProductsAsync(string name)
+        public async Task<List<Product>> GetAllProductsAsync()
         {
             _logger.LogInformation($"Getting all products from database");
 
@@ -48,14 +46,27 @@ namespace XeroTechnicalTest.Persistence.Repositories
             
             try
             {
-                var query = _dataContext.Products.AsQueryable();
+                products = await _dataContext.Products.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"An unhandled exception has occurred! Error: `{ex.Message}`");
+            }
 
-                if (!string.IsNullOrEmpty(name))
-                {
-                    query = query.Where(_ => _.Name == name);    
-                }
+            return products;
+        }
 
-                products = await query.ToListAsync();
+        public async Task<List<Product>> GetAllProductsByNameAsync(string name)
+        {
+            _logger.LogInformation($"Getting all products from database with name `{name}`");
+
+            var products = new List<Product>();
+            
+            try
+            {
+                products = await _dataContext.Products
+                    .Where(_ => _.Name == name)
+                    .ToListAsync();
             }
             catch (Exception ex)
             {
@@ -146,15 +157,15 @@ namespace XeroTechnicalTest.Persistence.Repositories
             return options;
         }
 
-        public async Task<ProductOption> GetProductOptionAsync(Guid id)
+        public async Task<ProductOption> GetProductOptionAsync(Guid productId, Guid optionId)
         {
-            _logger.LogInformation($"Getting option with id `{id}` from database");
+            _logger.LogInformation($"Getting option with id `{optionId}` on product with id `{productId}` from database");
             
             var option = new ProductOption();
             
             try
             {
-                option = await _dataContext.ProductOptions.FindAsync(id);
+                option = await _dataContext.ProductOptions.SingleOrDefaultAsync(_ => _.Id == optionId && _.ProductId == productId);
             }
             catch (Exception ex)
             {
@@ -187,7 +198,7 @@ namespace XeroTechnicalTest.Persistence.Repositories
 
         public async Task<bool> UpdateProductOptionAsync(ProductOption option)
         {
-            _logger.LogInformation($"Updating option with id `{option.Id}` in database");
+            _logger.LogInformation($"Updating option with id `{option.Id}` on product with `{option.ProductId}` in database");
             
             try
             {

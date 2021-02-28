@@ -10,12 +10,13 @@ namespace XeroTechnicalTest.Persistence.Repositories
     public interface IProductRepository
     {
         Task<Product> GetProductAsync(Guid id);
-        Task<List<Product>> GetAllProductsAsync(string name);
+        Task<List<Product>> GetAllProductsAsync();
+        Task<List<Product>> GetAllProductsByNameAsync(string name);
         Task<bool> CreateProductAsync(Product product);
         Task<bool> UpdateProductAsync(Product product);
         Task<bool> DeleteProductAsync(Guid id);
         Task<List<ProductOption>> GetAllProductOptionsAsync(Guid id);
-        Task<ProductOption> GetProductOptionAsync(Guid optionId);
+        Task<ProductOption> GetProductOptionAsync(Guid productId, Guid optionId);
         Task<bool> CreateProductOptionAsync(ProductOption option);
         Task<bool> UpdateProductOptionAsync(ProductOption option);
         Task<bool> DeleteProductOptionAsync(Guid id);

@@ -9,6 +9,7 @@ using XeroTechnicalTest.Domain.Exceptions;
 using XeroTechnicalTest.Domain.Models;
 using XeroTechnicalTest.Domain.Services.DTO;
 using XeroTechnicalTest.Domain.Services.Product.DTO;
+using XeroTechnicalTest.Persistence.Repositories;
 
 namespace XeroTechnicalTest.Domain.Services
 {
@@ -16,6 +17,7 @@ namespace XeroTechnicalTest.Domain.Services
     {
         private readonly DataContext _dataContext;
         private readonly ILogger<ProductService> _logger;
+        private readonly IProductRepository _productRepository;
 
         public ProductService(DataContext dataContext, ILogger<ProductService> logger)
         {
@@ -28,7 +30,7 @@ namespace XeroTechnicalTest.Domain.Services
         {
             _logger.LogInformation($"Getting product by id `{id}`");
             
-            var product = await _dataContext.Products.SingleOrDefaultAsync(_ => _.Id == id);
+            var product = await _productRepository.GetProductAsync(id);
             
             if (product == null)
                 _logger.LogInformation($"Could not find product with id `{id}`.");
@@ -39,15 +41,21 @@ namespace XeroTechnicalTest.Domain.Services
         public async Task<List<Models.Product>> GetAllProductsAsync(string name)
         {
             _logger.LogInformation($"Getting all products");
-            
-            var query = _dataContext.Products.AsQueryable();
 
-            if (!string.IsNullOrEmpty(name))
+            var products = new List<Models.Product>();
+            
+            if (!string.IsNullOrWhiteSpace(name))
             {
-                query = query.Where(_ => _.Name == name);    
+                products = await _productRepository.GetAllProductsByNameAsync(name);
+            }
+            else
+            {
+                products = await _productRepository.GetAllProductsAsync();
             }
             
-            return await query.ToListAsync();
+            _logger.LogInformation($"Retrieved `{products.Count}` products.");
+            
+            return products;
         }
         
         public async Task<bool> CreateProductAsync(CreateProduct dto)
@@ -62,8 +70,12 @@ namespace XeroTechnicalTest.Domain.Services
                 Price = dto.Price,
                 DeliveryPrice = dto.DeliveryPrice
             };
-            await _dataContext.Products.AddAsync(product);
-            return await _dataContext.SaveChangesAsync() > 0;
+            
+            var success = await _productRepository.CreateProductAsync(product);
+            if (!success)
+                _logger.LogInformation($"Failed to create product.");
+
+            return success;
         }
 
         public async Task<bool> UpdateProductAsync(Guid id, UpdateProduct dto)
@@ -71,38 +83,38 @@ namespace XeroTechnicalTest.Domain.Services
             _logger.LogInformation($"Updating product with id `{id}`");
             
             var product = await _dataContext.Products.SingleOrDefaultAsync(_ => _.Id == id);
-            
+
             if (product == null)
+            {
                 _logger.LogInformation($"Could not find product with id `{id}`.");
+                
+                return false;
+            }
 
-            HandleProductUpdate(product, dto);
-
-            return await _dataContext.SaveChangesAsync() > 0;
-        }
-
-        private void HandleProductUpdate(Models.Product product, UpdateProduct dto)
-        {
-            if (!string.IsNullOrWhiteSpace(dto.Name)) 
-                product.Name = dto.Name;
-            if (!string.IsNullOrWhiteSpace(dto.Description)) 
-                product.Description = dto.Description;
-            if (dto.Price != null) 
-                product.Price = dto.Price.Value;
-            if (dto.DeliveryPrice != null) 
-                product.DeliveryPrice = dto.DeliveryPrice.Value;
+            var success = await _productRepository.UpdateProductAsync(new Models.Product
+            {
+                Id = id,
+                Name = dto.Name,
+                Description = dto.Description,
+                Price = dto.Price,
+                DeliveryPrice = dto.DeliveryPrice
+            });
+            
+            if (!success)
+                _logger.LogInformation($"Failed to update product with id `{id}`.");
+            
+            return success;
         }
 
         public async Task<bool> DeleteProductAsync(Guid id)
         {
             _logger.LogInformation($"Deleting product with id `{id}`");
             
-            var product = await _dataContext.Products.SingleOrDefaultAsync(_ => _.Id == id);
-            
-            if (product == null)
+            var success = await _productRepository.DeleteProductAsync(id);
+            if (!success)
                 _logger.LogInformation($"Could not find product with id `{id}`.");
             
-            _dataContext.Products.Remove(product);
-            return await _dataContext.SaveChangesAsync() > 0;
+            return success;
         }
         
         #endregion
@@ -113,8 +125,7 @@ namespace XeroTechnicalTest.Domain.Services
         {
             _logger.LogInformation($"Getting option with product id `{productId}` and option id `{optionId}`");
 
-            var productOption = await _dataContext.ProductOptions
-                .SingleOrDefaultAsync(_ => _.ProductId == productId && _.Id == optionId);
+            var productOption = await _productRepository.GetProductOptionAsync(productId, optionId);
             
             if (productOption == null)
                 _logger.LogInformation($"Could not find option with product id `{productId}` and option id `{optionId}`");
@@ -126,14 +137,11 @@ namespace XeroTechnicalTest.Domain.Services
         {
             _logger.LogInformation($"Getting all options for product with id `{productId}`");
 
-            var product = await _dataContext.Products
-                .Include(_ => _.Options)
-                .SingleOrDefaultAsync(_ => _.Id == productId);
+            var options = await _productRepository.GetAllProductOptionsAsync(productId);
             
-            if (product == null)
-                _logger.LogInformation($"Could not find product with id `{productId}`.");
+            _logger.LogInformation($"Retrieved `{options.Count}` options.");
             
-            return product.Options.ToList();
+            return options;
         }
         
         public async Task<bool> CreateProductOptionAsync(Guid productId, CreateProductOption dto)
@@ -147,48 +155,49 @@ namespace XeroTechnicalTest.Domain.Services
                 Name = dto.Name,
                 Description = dto.Description
             };
-            await _dataContext.ProductOptions.AddAsync(option);
-            return await _dataContext.SaveChangesAsync() > 0;
+
+            var success = await _productRepository.CreateProductOptionAsync(option);
+            if (!success)
+                _logger.LogInformation($"Failed to create option on product with id `{productId}`.");
+                
+            return success;
         }
 
         public async Task<bool> UpdateProductOptionAsync(Guid productId, Guid optionId, UpdateProductOption dto)
         {
             _logger.LogInformation($"Updating product option for product with id `{productId}` and option id `{optionId}`");
 
-            var option = await _dataContext.ProductOptions
-                .SingleOrDefaultAsync(_ => _.ProductId == productId && _.Id == optionId);
+            var option = new ProductOption()
+            {
+                Id = optionId,
+                ProductId = productId,
+                Name = dto.Name,
+                Description = dto.Description,
+            };
             
-            if (option == null)
-                _logger.LogInformation($"Could not find option with productId `{productId}` and optionId `{optionId}`.");
+            var success = await _productRepository.UpdateProductOptionAsync(option);
+            if (!success)
+                _logger.LogInformation($"Failed to update option with id `{optionId}` on productId `{productId}`.");
 
-            HandleProductOptionUpdate(option, dto);
-
-            return await _dataContext.SaveChangesAsync() > 0;
-        }
-
-        private void HandleProductOptionUpdate(ProductOption option, UpdateProductOption dto)
-        {
-            if (!string.IsNullOrWhiteSpace(dto.Name)) 
-                option.Name = dto.Name;
-            if (!string.IsNullOrWhiteSpace(dto.Description)) 
-                option.Description = dto.Description;
+            return success;
         }
 
         public async Task<bool> DeleteProductOptionAsync(Guid productId, Guid optionId)
         {
             _logger.LogInformation($"Deleting option for product with id `{productId}` and option id `{optionId}`");
 
-            var option = await _dataContext.ProductOptions
-                .SingleOrDefaultAsync(_ => _.ProductId == productId && _.Id == optionId);
-
+            var option = await _productRepository.GetProductOptionAsync(productId, optionId);
             if (option == null)
             {
                 _logger.LogInformation($"Could not find option with productId '{productId}' and optionId '{optionId}'");
                 return false;
             }
+
+            var success = await _productRepository.DeleteProductOptionAsync(optionId);
+            if (!success)
+                _logger.LogInformation($"Failed to delete option with id `{optionId}` on productId `{productId}`.");
             
-            _dataContext.ProductOptions.Remove(option);
-            return await _dataContext.SaveChangesAsync() > 0;
+            return success;
         }
         
         #endregion

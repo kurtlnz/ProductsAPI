@@ -16,9 +16,10 @@ namespace XeroTechnicalTest.Domain.Services
         private readonly ILogger<ProductService> _logger;
         private readonly IProductRepository _productRepository;
 
-        public ProductService(ILogger<ProductService> logger)
+        public ProductService(ILogger<ProductService> logger, IProductRepository productRepository)
         {
             _logger = logger;
+            _productRepository = productRepository;
         }
         
         #region Products

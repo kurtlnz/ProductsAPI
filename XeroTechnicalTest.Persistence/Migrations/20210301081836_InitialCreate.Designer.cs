@@ -6,17 +6,17 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using XeroTechnicalTest.Domain;
 
-namespace XeroTechnicalTest.Domain.Migrations
+namespace XeroTechnicalTest.Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200829020127_InitialCreate")]
+    [Migration("20210301081836_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.7");
+                .HasAnnotation("ProductVersion", "3.1.12");
 
             modelBuilder.Entity("XeroTechnicalTest.Domain.Models.Product", b =>
                 {
@@ -37,6 +37,9 @@ namespace XeroTechnicalTest.Domain.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("Price")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -62,9 +65,23 @@ namespace XeroTechnicalTest.Domain.Migrations
                     b.Property<Guid>("ProductId")
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("ProductId");
+
                     b.ToTable("ProductOptions");
+                });
+
+            modelBuilder.Entity("XeroTechnicalTest.Domain.Models.ProductOption", b =>
+                {
+                    b.HasOne("XeroTechnicalTest.Domain.Models.Product", null)
+                        .WithMany("Options")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

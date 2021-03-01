@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using XeroTechnicalTest.Domain.Exceptions;
 using XeroTechnicalTest.Domain.Models;
 using XeroTechnicalTest.Domain.Services.DTO;
@@ -55,16 +56,7 @@ namespace XeroTechnicalTest.Domain.Services
         
         public async Task<bool> CreateProductAsync(CreateProduct dto)
         {
-            // TODO: serialize json object into string
-            _logger.LogInformation($"Creating product: ");
-            
-            var product = new Models.Product()
-            {
-                Name = dto.Name,
-                Description = dto.Description,
-                Price = dto.Price,
-                DeliveryPrice = dto.DeliveryPrice
-            };
+            _logger.LogInformation($"Creating product: {JsonConvert.SerializeObject(dto)}");
             
             var success = await _productRepository.CreateProductAsync(dto.ToProduct());
             if (!success)
@@ -85,15 +77,7 @@ namespace XeroTechnicalTest.Domain.Services
                 throw new ProductNotFoundException(message);
             }
 
-            var success = await _productRepository.UpdateProductAsync(new Models.Product
-            {
-                Id = id,
-                Name = dto.Name,
-                Description = dto.Description,
-                Price = dto.Price,
-                DeliveryPrice = dto.DeliveryPrice
-            });
-            
+            var success = await _productRepository.UpdateProductAsync(dto.ToProduct(id));
             if (!success)
                 _logger.LogWarning($"Failed to update product with id `{id}`.");
             
@@ -148,8 +132,7 @@ namespace XeroTechnicalTest.Domain.Services
         
         public async Task<bool> CreateProductOptionAsync(Guid productId, CreateProductOption dto)
         {
-            // TODO: serialize product option
-            _logger.LogInformation($"Creating option for product with id `{productId}`");
+            _logger.LogInformation($"Creating option {JsonConvert.SerializeObject(dto)} for product with id `{productId}`");
 
             var product = _productRepository.GetProductAsync(productId);
             if (product == null)
@@ -158,15 +141,8 @@ namespace XeroTechnicalTest.Domain.Services
                 _logger.LogInformation(message);
                 throw new ProductNotFoundException(message);
             }
-            
-            var option = new ProductOption()
-            {
-                ProductId = productId,
-                Name = dto.Name,
-                Description = dto.Description
-            };
 
-            var success = await _productRepository.CreateProductOptionAsync(option);
+            var success = await _productRepository.CreateProductOptionAsync(dto.ToProductOption(productId));
             if (!success)
                 _logger.LogWarning($"Failed to create option on product with id `{productId}`.");
                 
@@ -184,16 +160,8 @@ namespace XeroTechnicalTest.Domain.Services
                 _logger.LogInformation(message);
                 throw new ProductOptionNotFoundException(message);
             }
-
-            option = new ProductOption()
-            {
-                Id = optionId,
-                ProductId = productId,
-                Name = dto.Name,
-                Description = dto.Description,
-            };
             
-            var success = await _productRepository.UpdateProductOptionAsync(option);
+            var success = await _productRepository.UpdateProductOptionAsync(dto.ToProductOption(productId, optionId));
             if (!success)
                 _logger.LogWarning($"Failed to update option with id `{optionId}` on productId `{productId}`.");
 

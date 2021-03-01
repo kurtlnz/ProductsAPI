@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -85,7 +84,7 @@ namespace XeroTechnicalTest.Controllers
 
                 return Ok(success);
             }
-            catch (ProductNotFoundException ex)
+            catch (ProductNotFoundException)
             {
                 return NotFound();
             }
@@ -104,7 +103,7 @@ namespace XeroTechnicalTest.Controllers
 
                 return Ok(success);
             }
-            catch (ProductNotFoundException ex)
+            catch (ProductNotFoundException)
             {
                 return NotFound();
             }
@@ -127,7 +126,7 @@ namespace XeroTechnicalTest.Controllers
 
                 return Ok(result);
             }
-            catch (ProductNotFoundException ex)
+            catch (ProductNotFoundException)
             {
                 return NotFound();
             }
@@ -151,7 +150,7 @@ namespace XeroTechnicalTest.Controllers
                 
                 return Ok(result);
             }
-            catch (ProductOptionNotFoundException ex)
+            catch (ProductOptionNotFoundException)
             {
                 return NotFound();
             }
@@ -175,7 +174,7 @@ namespace XeroTechnicalTest.Controllers
                 
                 return Ok(success);
             }
-            catch (ProductNotFoundException ex)
+            catch (ProductNotFoundException)
             {
                 return NotFound();
             }
@@ -194,7 +193,7 @@ namespace XeroTechnicalTest.Controllers
                 
                 return Ok(success);
             }
-            catch (ProductOptionNotFoundException ex)
+            catch (ProductOptionNotFoundException)
             {
                 return NotFound();
             }
@@ -213,7 +212,7 @@ namespace XeroTechnicalTest.Controllers
 
                 return Ok(success);
             }
-            catch (ProductOptionNotFoundException ex)
+            catch (ProductOptionNotFoundException)
             {
                 return NotFound();
             }

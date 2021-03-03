@@ -18,6 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\XeroTechnicalTest.API\XeroTechnicalTest.API.csproj" />
       <ProjectReference Include="..\XeroTechnicalTest.Application\XeroTechnicalTest.Application.csproj" />
     </ItemGroup>
 

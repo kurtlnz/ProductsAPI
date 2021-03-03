@@ -69,7 +69,7 @@ namespace XeroTechnicalTest.Persistence.Repositories
             try
             {
                 products = await _dataContext.Products
-                    .Where(_ => string.Equals(_.Name, name, StringComparison.CurrentCultureIgnoreCase))
+                    .Where(_ => _.Name.ToLower() == name.ToLower())
                     .ToListAsync();
             }
             catch (Exception ex)

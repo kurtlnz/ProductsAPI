@@ -165,8 +165,8 @@ namespace XeroTechnicalTest.UnitTests.Application.Services.Product
 
             // Assert
             Assert.AreEqual(result.Id, productId);
-            Assert.AreEqual(result.Name, "Product Name 1");
-            Assert.AreEqual(result.Description, "Product Description 1");
+            Assert.AreEqual(result.Name, "Product Name");
+            Assert.AreEqual(result.Description, "Product Description");
             Assert.AreEqual(result.Price, 100);
             Assert.AreEqual(result.DeliveryPrice, 2);
         }

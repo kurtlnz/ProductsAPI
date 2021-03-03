@@ -29,7 +29,7 @@ namespace XeroTechnicalTest.UnitTests.Application.Services.Product
         }
         
         [Test]
-        public async Task GetProductAsync_GivenProductId_ReturnsProduct()
+        public async Task GetProductAsync_ProductExists_ReturnsProduct()
         {
             // Arrange
             var productId = Guid.NewGuid();
@@ -55,6 +55,23 @@ namespace XeroTechnicalTest.UnitTests.Application.Services.Product
             Assert.AreEqual(product.Price, result.Price);
             Assert.AreEqual(product.DeliveryPrice, result.DeliveryPrice);
             
+        }
+        
+        [Test]
+        public async Task GetProductAsync_ProductDoesNotExist_ReturnsNull()
+        {
+            // Arrange
+            var productId = Guid.NewGuid();
+
+            _mockProductRepository
+                .Setup(m => m.GetProductAsync(It.IsAny<Guid>()))
+                .ReturnsAsync(null as Domain.Models.Product);
+
+            // Act
+            var result = await _sut.GetProductAsync(productId);
+
+            // Assert
+            Assert.IsNull(result);
         }
         
         [Test]

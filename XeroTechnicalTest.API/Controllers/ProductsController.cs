@@ -9,12 +9,13 @@ using XeroTechnicalTest.Domain.Models;
 using XeroTechnicalTest.Domain.Services;
 using XeroTechnicalTest.Domain.Services.DTO;
 using XeroTechnicalTest.Domain.Services.Product.DTO;
+using XeroTechnicalTest.Filters;
 
 namespace XeroTechnicalTest.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class ProductsController : ControllerBase
+    public class ProductsController : ApiController
     {
         private readonly ILogger<ProductsController> _logger;
         private readonly IProductService _productService;

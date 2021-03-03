@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Text.Json.Serialization;
 using XeroTechnicalTest.Domain.Services.DTO;
 
 namespace XeroTechnicalTest.Domain.Models
@@ -14,16 +12,12 @@ namespace XeroTechnicalTest.Domain.Models
 
         public decimal DeliveryPrice { get; set; }
 
-        [JsonIgnore]
-        public virtual ICollection<ProductOption> Options { get; set; }
-
         public Product Update(UpdateProduct dto)
         {
             Name = dto.Name;
             Description = dto.Description;
             Price = dto.Price;
             DeliveryPrice = dto.DeliveryPrice;
-            
             return this;
         }
     }

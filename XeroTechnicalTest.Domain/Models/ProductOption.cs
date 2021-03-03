@@ -7,10 +7,9 @@ namespace XeroTechnicalTest.Domain.Models
     {
         [JsonIgnore]
         public Guid ProductId { get; set; }
-
+        
         public string Name { get; set; }
 
         public string Description { get; set; }
-
     }
 }

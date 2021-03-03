@@ -29,7 +29,7 @@ namespace XeroTechnicalTest.Domain.Services
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        Task<bool> CreateProductAsync(CreateProduct dto);
+        Task<Models.Product> CreateProductAsync(CreateProduct dto);
 
         /// <summary>
         /// Update values on existing product in db.
@@ -37,7 +37,7 @@ namespace XeroTechnicalTest.Domain.Services
         /// <param name="id"></param>
         /// <param name="dto"></param>
         /// <returns></returns>
-        Task<bool> UpdateProductAsync(Guid id, UpdateProduct dto);
+        Task<Models.Product> UpdateProductAsync(Guid id, UpdateProduct dto);
 
         /// <summary>
         /// Delete product from db.
@@ -67,7 +67,7 @@ namespace XeroTechnicalTest.Domain.Services
         /// <param name="productId"></param>
         /// <param name="dto"></param>
         /// <returns></returns>
-        Task<bool> CreateProductOptionAsync(Guid productId, CreateProductOption dto);
+        Task<ProductOption> CreateProductOptionAsync(Guid productId, CreateProductOption dto);
         
         /// <summary>
         /// Update values on product option matching productId and optionId.
@@ -76,7 +76,7 @@ namespace XeroTechnicalTest.Domain.Services
         /// <param name="optionId"></param>
         /// <param name="dto"></param>
         /// <returns></returns>
-        Task<bool> UpdateProductOptionAsync(Guid productId, Guid optionId, UpdateProductOption dto);
+        Task<ProductOption> UpdateProductOptionAsync(Guid productId, Guid optionId, UpdateProductOption dto);
 
         /// <summary>
         /// Delete product option from product matching optionId

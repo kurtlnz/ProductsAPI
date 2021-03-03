@@ -14,14 +14,14 @@ namespace XeroTechnicalTest.Domain
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             => optionsBuilder.UseSqlite("Data source=App_Data/products.db");
-        
+
         public override async Task<int> SaveChangesAsync(
             bool acceptAllChangesOnSuccess,
             CancellationToken cancellationToken = default(CancellationToken)
         )
         {
             this.SetUpdatedAtTime();
-
+            
             return await base.SaveChangesAsync
             (
                 acceptAllChangesOnSuccess,

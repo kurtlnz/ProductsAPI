@@ -35,6 +35,7 @@ namespace XeroTechnicalTest.Persistence.Repositories
             catch (Exception ex)
             {
                 _logger.LogError($"An unhandled exception has occurred! Error: `{ex.Message}`");
+                throw;
             }
 
             return product;
@@ -53,6 +54,7 @@ namespace XeroTechnicalTest.Persistence.Repositories
             catch (Exception ex)
             {
                 _logger.LogError($"An unhandled exception has occurred! Error: `{ex.Message}`");
+                throw;
             }
 
             return products;
@@ -67,54 +69,51 @@ namespace XeroTechnicalTest.Persistence.Repositories
             try
             {
                 products = await _dataContext.Products
-                    .Where(_ => _.Name == name)
+                    .Where(_ => string.Equals(_.Name, name, StringComparison.CurrentCultureIgnoreCase))
                     .ToListAsync();
             }
             catch (Exception ex)
             {
                 _logger.LogError($"An unhandled exception has occurred! Error: `{ex.Message}`");
+                throw;
             }
 
             return products;
         }
         
-        public async Task<bool> CreateProductAsync(Product product)
+        public async Task<Product> CreateProductAsync(Product product)
         {
             _logger.LogInformation($"Creating product in database");
             
             try
             {
                 await _dataContext.Products.AddAsync(product);
+                await _dataContext.SaveChangesAsync();
                 
-                var result = await _dataContext.SaveChangesAsync() > 0;
-                
-                return result;
+                return product;
             }
             catch (Exception ex)
             {
                 _logger.LogError($"An unhandled exception has occurred! Error: `{ex.Message}`");
-                
-                return false;
+                throw;
             }
         }
         
-        public async Task<bool> UpdateProductAsync(Product product)
+        public async Task<Product> UpdateProductAsync(Product product)
         {
             _logger.LogInformation($"Updating product with `{product.Id}` in database");
             
             try
             {
                 _dataContext.Update(product);
+                await _dataContext.SaveChangesAsync();
 
-                var result = await _dataContext.SaveChangesAsync() > 0;
-
-                return result;
+                return product;
             }
             catch (Exception ex)
             {
                 _logger.LogError($"An unhandled exception has occurred! Error: `{ex.Message}`");
-                
-                return false;
+                throw;
             }
         }
         
@@ -134,8 +133,7 @@ namespace XeroTechnicalTest.Persistence.Repositories
             catch (Exception ex)
             {
                 _logger.LogError($"An unhandled exception has occurred! Error: `{ex.Message}`");
-                
-                return false;
+                throw;
             }
         }
 
@@ -154,6 +152,7 @@ namespace XeroTechnicalTest.Persistence.Repositories
             catch (Exception ex)
             {
                 _logger.LogError($"An unhandled exception has occurred! Error: `{ex.Message}`");
+                throw;
             }
 
             return options;
@@ -172,49 +171,45 @@ namespace XeroTechnicalTest.Persistence.Repositories
             catch (Exception ex)
             {
                 _logger.LogError($"An unhandled exception has occurred! Error: `{ex.Message}`");
+                throw;
             }
 
             return option;
         }
 
-        public async Task<bool> CreateProductOptionAsync(ProductOption option)
+        public async Task<ProductOption> CreateProductOptionAsync(ProductOption option)
         {
             _logger.LogInformation($"Creating option on product with id `{option.ProductId}` in database");
             
             try
             {
                 await _dataContext.ProductOptions.AddAsync(option);
+                await _dataContext.SaveChangesAsync();
 
-                var result = await _dataContext.SaveChangesAsync() > 0;
-
-                return result;
+                return option;
             }
             catch (Exception ex)
             {
                 _logger.LogError($"An unhandled exception has occurred! Error: `{ex.Message}`");
-                
-                return false;
+                throw;
             }
-            
         }
 
-        public async Task<bool> UpdateProductOptionAsync(ProductOption option)
+        public async Task<ProductOption> UpdateProductOptionAsync(ProductOption option)
         {
             _logger.LogInformation($"Updating option with id `{option.Id}` on product with `{option.ProductId}` in database");
             
             try
             {
                 _dataContext.ProductOptions.Update(option);
+                await _dataContext.SaveChangesAsync();
 
-                var result = await _dataContext.SaveChangesAsync() > 0;
-
-                return result;
+                return option;
             }
             catch (Exception ex)
             {
                 _logger.LogError($"An unhandled exception has occurred! Error: `{ex.Message}`");
-
-                return false;
+                throw;
             }
         }
         
@@ -234,8 +229,7 @@ namespace XeroTechnicalTest.Persistence.Repositories
             catch (Exception ex)
             {
                 _logger.LogError($"An unhandled exception has occurred! Error: `{ex.Message}`");
-
-                return false;
+                throw;
             }
             
         }

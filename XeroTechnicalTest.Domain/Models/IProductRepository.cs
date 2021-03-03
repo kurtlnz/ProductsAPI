@@ -10,13 +10,13 @@ namespace XeroTechnicalTest.Persistence.Repositories
         Task<Product> GetProductAsync(Guid id);
         Task<List<Product>> GetAllProductsAsync();
         Task<List<Product>> GetAllProductsByNameAsync(string name);
-        Task<bool> CreateProductAsync(Product product);
-        Task<bool> UpdateProductAsync(Product product);
+        Task<Product> CreateProductAsync(Product product);
+        Task<Product> UpdateProductAsync(Product product);
         Task<bool> DeleteProductAsync(Guid id);
         Task<List<ProductOption>> GetAllProductOptionsAsync(Guid id);
         Task<ProductOption> GetProductOptionAsync(Guid productId, Guid optionId);
-        Task<bool> CreateProductOptionAsync(ProductOption option);
-        Task<bool> UpdateProductOptionAsync(ProductOption option);
+        Task<ProductOption> CreateProductOptionAsync(ProductOption option);
+        Task<ProductOption> UpdateProductOptionAsync(ProductOption option);
         Task<bool> DeleteProductOptionAsync(Guid id);
     }
 }

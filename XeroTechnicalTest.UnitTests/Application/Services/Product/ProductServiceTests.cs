@@ -139,31 +139,8 @@ namespace XeroTechnicalTest.UnitTests.Application.Services.Product
         public async Task CreateProductAsync_IsSuccessful_ReturnsTrue()
         {
             // Arrange
-            var dto = new CreateProduct()
-            {
-                Name = "Product Name",
-                Description = "Product Description",
-                Price = 100,
-                DeliveryPrice = 2 
-            };
-
-            _mockProductRepository
-                .Setup(m => m.CreateProductAsync(It.IsAny<Domain.Models.Product>()))
-                .ReturnsAsync(true);
-            
-            // Act
-            var result = await _sut.CreateProductAsync(dto);
-
-            // Assert
-            Assert.That(result, Is.True);
-        }
-        
-        [Test]
-        public async Task UpdateProductAsync_IsSuccessful_ReturnsTrue()
-        {
-            // Arrange
             var productId = Guid.NewGuid();
-            var dto = new UpdateProduct()
+            var dto = new CreateProduct()
             {
                 Name = "Product Name",
                 Description = "Product Description",
@@ -180,19 +157,66 @@ namespace XeroTechnicalTest.UnitTests.Application.Services.Product
             };
 
             _mockProductRepository
+                .Setup(m => m.CreateProductAsync(It.IsAny<Domain.Models.Product>()))
+                .ReturnsAsync(product);
+            
+            // Act
+            var result = await _sut.CreateProductAsync(dto);
+
+            // Assert
+            Assert.AreEqual(result.Id, productId);
+            Assert.AreEqual(result.Name, "Product Name 1");
+            Assert.AreEqual(result.Description, "Product Description 1");
+            Assert.AreEqual(result.Price, 100);
+            Assert.AreEqual(result.DeliveryPrice, 2);
+        }
+        
+        [Test]
+        public async Task UpdateProductAsync_IsSuccessful_ReturnsTrue()
+        {
+            // Arrange
+            var productId = Guid.NewGuid();
+            var dto = new UpdateProduct()
+            {
+                Name = "Product Name 1",
+                Description = "Product Description 1",
+                Price = 200,
+                DeliveryPrice = 3
+            };
+            var product = new Domain.Models.Product()
+            {
+                Id = productId,
+                Name = "Product Name",
+                Description = "Product Description",
+                Price = 100,
+                DeliveryPrice = 2 
+            };
+            var updatedProduct = new Domain.Models.Product()
+            {
+                Id = productId,
+                Name = "Product Name 1",
+                Description = "Product Description 1",
+                Price = 200,
+                DeliveryPrice = 3
+            };
+
+            _mockProductRepository
                 .Setup(m => m.GetProductAsync(It.IsAny<Guid>()))
                 .ReturnsAsync(product);
             
             _mockProductRepository
                 .Setup(m => m.UpdateProductAsync(It.IsAny<Domain.Models.Product>()))
-                .ReturnsAsync(true);
+                .ReturnsAsync(updatedProduct);
             
             // Act
             var result = await _sut.UpdateProductAsync(productId, dto);
 
             // Assert
-            Assert.That(result, Is.True);
-
+            Assert.AreEqual(result.Id, productId);
+            Assert.AreEqual(result.Name, "Product Name 1");
+            Assert.AreEqual(result.Description, "Product Description 1");
+            Assert.AreEqual(result.Price, 200);
+            Assert.AreEqual(result.DeliveryPrice, 3);
         }
         
         [Test]
@@ -296,16 +320,30 @@ namespace XeroTechnicalTest.UnitTests.Application.Services.Product
             {
                 new ProductOption
                 {
+                    ProductId = productId,
                     Name = "Product Option Name 1",
                     Description = "Product Option Description 1"
                 },
                 new ProductOption
                 {
+                    ProductId = productId,
                     Name = "Product Option Name 2",
                     Description = "Product Option Description 2"
                 }
             };
+            var product = new Domain.Models.Product()
+            {
+                Id = productId,
+                Name = "Product Name",
+                Description = "Product Description",
+                Price = 100,
+                DeliveryPrice = 2 
+            };
 
+            _mockProductRepository
+                .Setup(m => m.GetProductAsync(It.IsAny<Guid>()))
+                .ReturnsAsync(product);
+            
             _mockProductRepository
                 .Setup(m => m.GetAllProductOptionsAsync(It.IsAny<Guid>()))
                 .ReturnsAsync(options);
@@ -319,7 +357,20 @@ namespace XeroTechnicalTest.UnitTests.Application.Services.Product
             Assert.AreEqual(options[0].Description, results[0].Description);
             Assert.AreEqual(options[1].Name, results[1].Name);
             Assert.AreEqual(options[1].Description, results[1].Description);
+        }
+        
+        [Test]
+        public async Task GetAllProductOptionsAsync_ProductNotFound_ThrowsProductNotFoundException()
+        {
+            // Arrange
+            var productId = Guid.NewGuid();
 
+            _mockProductRepository
+                .Setup(m => m.GetProductAsync(It.IsAny<Guid>()))
+                .ReturnsAsync(null as Domain.Models.Product);
+
+            // Assert
+            Assert.That(() => _sut.GetAllProductOptionsAsync(productId), Throws.Exception.TypeOf<ProductNotFoundException>());
         }
         
         [Test]
@@ -334,10 +385,15 @@ namespace XeroTechnicalTest.UnitTests.Application.Services.Product
             };
             var product = new Domain.Models.Product
             {
-                Name = "Product Option Name 1",
-                Description = "Product Option Description 1",
+                Name = "Product Name 1",
+                Description = "Product Description 1",
                 Price = 100,
                 DeliveryPrice = 2
+            };
+            var option = new ProductOption
+            {
+                Name = "Product Option Name 1",
+                Description = "Product Option Description 1",
             };
 
             _mockProductRepository
@@ -346,13 +402,14 @@ namespace XeroTechnicalTest.UnitTests.Application.Services.Product
 
             _mockProductRepository
                 .Setup(m => m.CreateProductOptionAsync(It.IsAny<ProductOption>()))
-                .ReturnsAsync(true);
+                .ReturnsAsync(option);
             
             // Act
             var result = await _sut.CreateProductOptionAsync(productId, dto);
 
             // Assert
-            Assert.That(result, Is.True);
+            Assert.AreEqual(option.Name, result.Name);
+            Assert.AreEqual(option.Description, result.Description);
         }
         
         [Test]
@@ -390,6 +447,11 @@ namespace XeroTechnicalTest.UnitTests.Application.Services.Product
                 Name = "Product Option Name 1",
                 Description = "Product Option Description 1"
             };
+            var updatedOption = new ProductOption
+            {
+                Name = "Product Option Name 2",
+                Description = "Product Option Description 2"
+            };
 
             _mockProductRepository
                 .Setup(m => m.GetProductOptionAsync(It.IsAny<Guid>(), It.IsAny<Guid>()))
@@ -397,13 +459,14 @@ namespace XeroTechnicalTest.UnitTests.Application.Services.Product
             
             _mockProductRepository
                 .Setup(m => m.UpdateProductOptionAsync(It.IsAny<ProductOption>()))
-                .ReturnsAsync(true);
+                .ReturnsAsync(updatedOption);
             
             // Act
             var result = await _sut.UpdateProductOptionAsync(productId, optionId, dto);
 
             // Assert
-            Assert.That(result, Is.True);
+            Assert.AreEqual(updatedOption.Name, result.Name);
+            Assert.AreEqual(updatedOption.Description, result.Description);
         }
         
         [Test]

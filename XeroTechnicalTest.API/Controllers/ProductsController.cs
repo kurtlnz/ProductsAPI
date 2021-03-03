@@ -66,23 +66,28 @@ namespace XeroTechnicalTest.Controllers
                 return BadRequest();
             }
             
-            var success = await _productService.CreateProductAsync(request);
+            var result = await _productService.CreateProductAsync(request);
             
-            return Ok(success);
+            return Ok(result);
         }
 
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdateProduct(Guid id, [FromBody] UpdateProduct request)
+        public async Task<IActionResult> UpdateProduct(Guid id, UpdateProduct request)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            
             try
             {
                 _logger.LogInformation($"[PUT] /products/{id}");
-                
-                var success = await _productService.UpdateProductAsync(id, request);
 
-                return Ok(success);
+                var result = await _productService.UpdateProductAsync(id, request);
+
+                return Ok(result);
             }
             catch (ProductNotFoundException)
             {
@@ -98,10 +103,10 @@ namespace XeroTechnicalTest.Controllers
             try
             {
                 _logger.LogInformation($"[DELETE] /products/{id}");
+                
+                await _productService.DeleteProductAsync(id);
 
-                var success = await _productService.DeleteProductAsync(id);
-
-                return Ok(success);
+                return NoContent();
             }
             catch (ProductNotFoundException)
             {
@@ -161,8 +166,6 @@ namespace XeroTechnicalTest.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateOption(Guid id, CreateProductOption request)
         {
-            _logger.LogInformation($"[POST] /products/{id}/options");
-
             if (!ModelState.IsValid)
             {
                 return BadRequest();
@@ -170,9 +173,11 @@ namespace XeroTechnicalTest.Controllers
             
             try
             {
-                var success = await _productService.CreateProductOptionAsync(id, request);
+                _logger.LogInformation($"[POST] /products/{id}/options");
+
+                var result = await _productService.CreateProductOptionAsync(id, request);
                 
-                return Ok(success);
+                return Ok(result);
             }
             catch (ProductNotFoundException)
             {
@@ -185,6 +190,11 @@ namespace XeroTechnicalTest.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateOption(Guid id, Guid optionId, UpdateProductOption request)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+            
             try
             {
                 _logger.LogInformation($"[PUT] /products/{id}/options/{optionId}");
@@ -208,9 +218,9 @@ namespace XeroTechnicalTest.Controllers
             {
                 _logger.LogInformation($"[DELETE] /products/{id}/options/{optionId}");
 
-                var success = await _productService.DeleteProductOptionAsync(id, optionId);
+                await _productService.DeleteProductOptionAsync(id, optionId);
 
-                return Ok(success);
+                return NoContent();
             }
             catch (ProductOptionNotFoundException)
             {

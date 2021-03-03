@@ -55,34 +55,23 @@ namespace XeroTechnicalTest.Domain.Services
             return products;
         }
         
-        public async Task<bool> CreateProductAsync(CreateProduct dto)
+        public async Task<Models.Product> CreateProductAsync(CreateProduct dto)
         {
             _logger.LogInformation($"Creating product: {JsonConvert.SerializeObject(dto)}");
             
-            var success = await _productRepository.CreateProductAsync(dto.ToProduct());
-            if (!success)
-                _logger.LogWarning($"Failed to create product.");
-
-            return success;
+            return await _productRepository.CreateProductAsync(dto.ToProduct());
         }
 
-        public async Task<bool> UpdateProductAsync(Guid id, UpdateProduct dto)
+        public async Task<Models.Product> UpdateProductAsync(Guid id, UpdateProduct dto)
         {
             _logger.LogInformation($"Updating product with id `{id}`");
 
             var product = await _productRepository.GetProductAsync(id);
-            if (product == null)
-            {
-                var message = $"Could not find product with id `{id}`.";
-                _logger.LogInformation(message);
-                throw new ProductNotFoundException(message);
-            }
-
-            var success = await _productRepository.UpdateProductAsync(product.Update(dto));
-            if (!success)
-                _logger.LogWarning($"Failed to update product with id `{id}`.");
             
-            return success;
+            if (product == null)
+                throw new ProductNotFoundException($"Could not find product with id `{id}`.");
+
+            return await _productRepository.UpdateProductAsync(product.Update(dto));
         }
 
         public async Task<bool> DeleteProductAsync(Guid id)
@@ -91,11 +80,7 @@ namespace XeroTechnicalTest.Domain.Services
 
             var product = await _productRepository.GetProductAsync(id);
             if (product == null)
-            {
-                var message = $"Could not find product with id `{id}`.";
-                _logger.LogInformation(message);
-                throw new ProductNotFoundException(message);
-            }
+                throw new ProductNotFoundException($"Could not find product with id `{id}`.");
             
             var success = await _productRepository.DeleteProductAsync(id);
             if (!success)
@@ -123,50 +108,40 @@ namespace XeroTechnicalTest.Domain.Services
         public async Task<List<ProductOption>> GetAllProductOptionsAsync(Guid productId)
         {
             _logger.LogInformation($"Getting all options for product with id `{productId}`");
+            
+            var product = await _productRepository.GetProductAsync(productId);
+            if (product == null)
+                throw new ProductNotFoundException($"Could not find product with id `{productId}`.");
 
-            var options = await _productRepository.GetAllProductOptionsAsync(productId);
+            var options = await _productRepository.GetAllProductOptionsAsync(product.Id);
             
             _logger.LogInformation($"Retrieved `{options.Count}` options.");
             
             return options;
         }
         
-        public async Task<bool> CreateProductOptionAsync(Guid productId, CreateProductOption dto)
+        public async Task<ProductOption> CreateProductOptionAsync(Guid productId, CreateProductOption dto)
         {
             _logger.LogInformation($"Creating option {JsonConvert.SerializeObject(dto)} for product with id `{productId}`");
 
             var product = await _productRepository.GetProductAsync(productId);
+            
             if (product == null)
-            {
-                var message = $"Could not find product with id `{productId}`.";
-                _logger.LogInformation(message);
-                throw new ProductNotFoundException(message);
-            }
+                throw new ProductNotFoundException($"Could not find product with id `{productId}`.");
 
-            var success = await _productRepository.CreateProductOptionAsync(dto.ToProductOption(productId));
-            if (!success)
-                _logger.LogWarning($"Failed to create option on product with id `{productId}`.");
-                
-            return success;
+            return await _productRepository.CreateProductOptionAsync(dto.ToProductOption(productId));
         }
 
-        public async Task<bool> UpdateProductOptionAsync(Guid productId, Guid optionId, UpdateProductOption dto)
+        public async Task<ProductOption> UpdateProductOptionAsync(Guid productId, Guid optionId, UpdateProductOption dto)
         {
             _logger.LogInformation($"Updating product option for product with id `{productId}` and option id `{optionId}`");
             
             var option = await _productRepository.GetProductOptionAsync(productId, optionId);
-            if (option == null)
-            {
-                var message = $"Could not find option with id `{optionId}` on product with id `{productId}`.";
-                _logger.LogInformation(message);
-                throw new ProductOptionNotFoundException(message);
-            }
             
-            var success = await _productRepository.UpdateProductOptionAsync(dto.ToProductOption(productId, optionId));
-            if (!success)
-                _logger.LogWarning($"Failed to update option with id `{optionId}` on productId `{productId}`.");
+            if (option == null)
+                throw new ProductOptionNotFoundException($"Could not find option with id `{optionId}` on product with id `{productId}`.");
 
-            return success;
+            return await _productRepository.UpdateProductOptionAsync(dto.ToProductOption(productId, optionId));
         }
 
         public async Task<bool> DeleteProductOptionAsync(Guid productId, Guid optionId)
@@ -175,11 +150,7 @@ namespace XeroTechnicalTest.Domain.Services
 
             var option = await _productRepository.GetProductOptionAsync(productId, optionId);
             if (option == null)
-            {
-                var message = $"Could not find option with id `{optionId}` on product with id `{productId}`.";
-                _logger.LogInformation(message);
-                throw new ProductOptionNotFoundException(message);
-            }
+                throw new ProductOptionNotFoundException($"Could not find option with id `{optionId}` on product with id `{productId}`.");
 
             var success = await _productRepository.DeleteProductOptionAsync(optionId);
             if (!success)

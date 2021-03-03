@@ -70,7 +70,7 @@ namespace XeroTechnicalTest.Domain.Services
         {
             _logger.LogInformation($"Updating product with id `{id}`");
 
-            var product = _productRepository.GetProductAsync(id);
+            var product = await _productRepository.GetProductAsync(id);
             if (product == null)
             {
                 var message = $"Could not find product with id `{id}`.";
@@ -78,7 +78,7 @@ namespace XeroTechnicalTest.Domain.Services
                 throw new ProductNotFoundException(message);
             }
 
-            var success = await _productRepository.UpdateProductAsync(dto.ToProduct(id));
+            var success = await _productRepository.UpdateProductAsync(product.Update(dto));
             if (!success)
                 _logger.LogWarning($"Failed to update product with id `{id}`.");
             
@@ -89,7 +89,7 @@ namespace XeroTechnicalTest.Domain.Services
         {
             _logger.LogInformation($"Deleting product with id `{id}`");
 
-            var product = _productRepository.GetProductAsync(id);
+            var product = await _productRepository.GetProductAsync(id);
             if (product == null)
             {
                 var message = $"Could not find product with id `{id}`.";
@@ -135,7 +135,7 @@ namespace XeroTechnicalTest.Domain.Services
         {
             _logger.LogInformation($"Creating option {JsonConvert.SerializeObject(dto)} for product with id `{productId}`");
 
-            var product = _productRepository.GetProductAsync(productId);
+            var product = await _productRepository.GetProductAsync(productId);
             if (product == null)
             {
                 var message = $"Could not find product with id `{productId}`.";

@@ -28,7 +28,9 @@ namespace XeroTechnicalTest.Persistence.Repositories
             
             try
             {
-                product = await _dataContext.Products.FindAsync(id);
+                product = await _dataContext.Products
+                    .AsNoTracking()
+                    .SingleOrDefaultAsync(_ => _.Id == id);
             }
             catch (Exception ex)
             {

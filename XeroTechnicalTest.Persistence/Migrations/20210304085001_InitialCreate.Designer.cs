@@ -9,7 +9,7 @@ using XeroTechnicalTest.Domain;
 namespace XeroTechnicalTest.Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210301081836_InitialCreate")]
+    [Migration("20210304085001_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -70,18 +70,7 @@ namespace XeroTechnicalTest.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId");
-
                     b.ToTable("ProductOptions");
-                });
-
-            modelBuilder.Entity("XeroTechnicalTest.Domain.Models.ProductOption", b =>
-                {
-                    b.HasOne("XeroTechnicalTest.Domain.Models.Product", null)
-                        .WithMany("Options")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

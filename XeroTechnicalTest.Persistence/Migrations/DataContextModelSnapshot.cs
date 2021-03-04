@@ -68,18 +68,7 @@ namespace XeroTechnicalTest.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductId");
-
                     b.ToTable("ProductOptions");
-                });
-
-            modelBuilder.Entity("XeroTechnicalTest.Domain.Models.ProductOption", b =>
-                {
-                    b.HasOne("XeroTechnicalTest.Domain.Models.Product", null)
-                        .WithMany("Options")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

@@ -237,7 +237,7 @@ namespace XeroTechnicalTest.UnitTests.Application.Services.Product
         }
         
         [Test]
-        public async Task UpdateProductAsync_ProductNotFound_ThrowsProductNotFoundException()
+        public void UpdateProductAsync_ProductNotFound_ThrowsProductNotFoundException()
         {
             // Arrange
             var productId = Guid.NewGuid();
@@ -289,7 +289,7 @@ namespace XeroTechnicalTest.UnitTests.Application.Services.Product
         }
         
         [Test]
-        public async Task DeleteProductAsync_ProductNotFound_ThrowsProductNotFoundException()
+        public void DeleteProductAsync_ProductNotFound_ThrowsProductNotFoundException()
         {
             // Arrange
             var productId = Guid.NewGuid();
@@ -377,7 +377,7 @@ namespace XeroTechnicalTest.UnitTests.Application.Services.Product
         }
         
         [Test]
-        public async Task GetAllProductOptionsAsync_ProductNotFound_ThrowsProductNotFoundException()
+        public void GetAllProductOptionsAsync_ProductNotFound_ThrowsProductNotFoundException()
         {
             // Arrange
             var productId = Guid.NewGuid();
@@ -430,7 +430,7 @@ namespace XeroTechnicalTest.UnitTests.Application.Services.Product
         }
         
         [Test]
-        public async Task CreateProductOptionAsync_ProductNotFound_ThrowsProductNotFoundException()
+        public void CreateProductOptionAsync_ProductNotFound_ThrowsProductNotFoundException()
         {
             // Arrange
             var productId = Guid.NewGuid();
@@ -487,7 +487,7 @@ namespace XeroTechnicalTest.UnitTests.Application.Services.Product
         }
         
         [Test]
-        public async Task UpdateProductOptionAsync_OptionNotFound_ThrowsProductOptionNotFoundException()
+        public void UpdateProductOptionAsync_OptionNotFound_ThrowsProductOptionNotFoundException()
         {
             // Arrange
             var productId = Guid.NewGuid();
@@ -539,7 +539,7 @@ namespace XeroTechnicalTest.UnitTests.Application.Services.Product
         }
         
         [Test]
-        public async Task DeleteProductOptionAsync_OptionNotFound_ThrowsProductOptionNotFoundException()
+        public void DeleteProductOptionAsync_OptionNotFound_ThrowsProductOptionNotFoundException()
         {
             // Arrange
             var productId = Guid.NewGuid();

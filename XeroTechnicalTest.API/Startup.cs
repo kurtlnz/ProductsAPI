@@ -23,8 +23,6 @@ namespace XeroTechnicalTest
         {
             services.AddMvc();
             
-            services.AddAutoMapper(typeof(Startup));
-            
             services.AddDbContext<DataContext>();
 
             services.AddScoped<IProductService, ProductService>();

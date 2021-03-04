@@ -3,26 +3,33 @@
 The challenge was to evaluate and re-factor an existing .NET Web API for managing products and their options in C#. 
 
 The existing project has been converted to target .Net Core 3.1 with the existing data access methods moved out of
-the models in favour of a service layer utilizing EF Core.
+the models in favour of a service layer and a repository layer utilizing EF Core.
 
-## Technologies used:
+Considerations:
+The repository layer is thin with EF Core here, but I still think it's worth putting data access behind
+this abstraction as it makes it easier to replace data access in future and
+provides an interface for easier mocking of the DAL in unit tests.
+
+## Technologies:
 
 - ASP .NET Core 3.1
-- Microsoft Entity Framework Core 3.1.7
-- Automapper 8.1.1
-- NSwag 13.7.0
+- Microsoft Entity Framework Core
+- NSwag
+- Moq
+- NUnit
 - Sqlite
 
 ## Running the API:
 
-1. Open or unzip the solution into a chosen directory
-2. Open Terminal
-3. Navigate to the XeroTechnicalTest.API project
+1. cd XeroTechnicalTest.API project
 3. Execute `dotnet run`
 
-The API should now be running! 
+The API should now be running
 
-Optionally navigate to https://localhost:5001/swagger/index.html to view the API documentation.
+## Running the tests:
+
+1. In root of solution
+3. Execute `dotnet test`
 
 ## Database
 
@@ -31,7 +38,7 @@ Optionally navigate to https://localhost:5001/swagger/index.html to view the API
 
 Generating an empty database from the solution root: 
 ```
-dotnet ef database update --project XeroTechnicalTest.Domain --startup-project XeroTechnicalTest.API
+dotnet ef database update --project XeroTechnicalTest.Persistence --startup-project XeroTechnicalTest.API
 ```
 
 

@@ -10,6 +10,7 @@ using XeroTechnicalTest.Domain.Services;
 using XeroTechnicalTest.Domain.Services.DTO;
 using XeroTechnicalTest.Domain.Services.Product.DTO;
 using XeroTechnicalTest.Filters;
+using XeroTechnicalTest.Models;
 
 namespace XeroTechnicalTest.Controllers
 {
@@ -29,13 +30,14 @@ namespace XeroTechnicalTest.Controllers
         #region Product
         
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<Product>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ListResponse<Product>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetProducts([FromQuery] string name)
         {
             _logger.LogInformation($"[GET] /products");
-        
-            var result = await _productService.GetAllProductsAsync(name);
-            return Ok(result);
+
+            var results = await _productService.GetAllProductsAsync(name);;
+            
+            return Ok(new ListResponse<Product>(results));
         }
 
         [HttpGet("{id}")]
@@ -109,7 +111,7 @@ namespace XeroTechnicalTest.Controllers
         #region ProductOptions
         
         [HttpGet("{id}/options")]
-        [ProducesResponseType(typeof(IEnumerable<ProductOption>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ListResponse<ProductOption>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetOptions(Guid id)
         {
@@ -117,9 +119,9 @@ namespace XeroTechnicalTest.Controllers
             {
                 _logger.LogInformation($"[PUT] /products/{id}/options");
 
-                var result = await _productService.GetAllProductOptionsAsync(id);
-
-                return Ok(result);
+                var results = await _productService.GetAllProductOptionsAsync(id);
+                
+                return Ok(new ListResponse<ProductOption>(results));
             }
             catch (ProductNotFoundException)
             {

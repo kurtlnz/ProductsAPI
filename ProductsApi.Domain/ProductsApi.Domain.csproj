@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>XeroTechnicalTest.Domain</RootNamespace>
     </PropertyGroup>
 
 </Project>

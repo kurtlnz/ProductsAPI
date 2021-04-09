@@ -32,7 +32,7 @@ namespace XeroTechnicalTest
                 config.PostProcess = document =>
                 {
                     document.Info.Version = "v1";
-                    document.Info.Title = "XeroTechnicalTest.API";
+                    document.Info.Title = "ProductsApi.Web";
                     document.Info.Contact = new NSwag.OpenApiContact
                     {
                         Name = "Kurt Lim",

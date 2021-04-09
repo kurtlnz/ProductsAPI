@@ -4,6 +4,8 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
 
         <IsPackable>false</IsPackable>
+
+        <RootNamespace>XeroTechnicalTest.UnitTests</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -14,8 +16,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\XeroTechnicalTest.API\XeroTechnicalTest.API.csproj" />
-      <ProjectReference Include="..\XeroTechnicalTest.Application\XeroTechnicalTest.Application.csproj" />
+      <ProjectReference Include="..\ProductsApi.Application\ProductsApi.Application.csproj" />
+      <ProjectReference Include="..\ProductsApi.Web\ProductsApi.Web.csproj" />
     </ItemGroup>
 
 </Project>

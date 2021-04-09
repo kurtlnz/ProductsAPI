@@ -2,11 +2,12 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>XeroTechnicalTest.Application</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\XeroTechnicalTest.Domain\XeroTechnicalTest.Domain.csproj" />
-      <ProjectReference Include="..\XeroTechnicalTest.Persistence\XeroTechnicalTest.Persistence.csproj" />
+      <ProjectReference Include="..\ProductsApi.Domain\ProductsApi.Domain.csproj" />
+      <ProjectReference Include="..\ProductsApi.Persistence\ProductsApi.Persistence.csproj" />
     </ItemGroup>
 
     <ItemGroup>

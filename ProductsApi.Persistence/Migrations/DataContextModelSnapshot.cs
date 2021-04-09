@@ -2,23 +2,21 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using XeroTechnicalTest.Domain;
 
 namespace XeroTechnicalTest.Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210314102230_InitialCreate")]
-    partial class InitialCreate
+    partial class DataContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.12");
 
-            modelBuilder.Entity("XeroTechnicalTest.Domain.Models.Product", b =>
+            modelBuilder.Entity("ProductsApi.Domain.Models.Product", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -49,7 +47,7 @@ namespace XeroTechnicalTest.Persistence.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("XeroTechnicalTest.Domain.Models.ProductOption", b =>
+            modelBuilder.Entity("ProductsApi.Domain.Models.ProductOption", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -78,9 +76,9 @@ namespace XeroTechnicalTest.Persistence.Migrations
                     b.ToTable("ProductOptions");
                 });
 
-            modelBuilder.Entity("XeroTechnicalTest.Domain.Models.ProductOption", b =>
+            modelBuilder.Entity("ProductsApi.Domain.Models.ProductOption", b =>
                 {
-                    b.HasOne("XeroTechnicalTest.Domain.Models.Product", "Product")
+                    b.HasOne("ProductsApi.Domain.Models.Product", "Product")
                         .WithMany("ProductOptions")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)

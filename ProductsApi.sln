@@ -1,14 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XeroTechnicalTest.API", "XeroTechnicalTest.API\XeroTechnicalTest.API.csproj", "{529176B5-F038-4745-A9B8-E87E9D226F6C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductsApi.Web", "ProductsApi.Web\ProductsApi.Web.csproj", "{529176B5-F038-4745-A9B8-E87E9D226F6C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XeroTechnicalTest.Domain", "XeroTechnicalTest.Domain\XeroTechnicalTest.Domain.csproj", "{F36F4F4D-A7DE-474B-9EB4-229019D77A87}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductsApi.Domain", "ProductsApi.Domain\ProductsApi.Domain.csproj", "{F36F4F4D-A7DE-474B-9EB4-229019D77A87}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XeroTechnicalTest.Persistence", "XeroTechnicalTest.Persistence\XeroTechnicalTest.Persistence.csproj", "{6BB0E02B-3C1A-435D-9C74-D23E177E35AC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductsApi.Persistence", "ProductsApi.Persistence\ProductsApi.Persistence.csproj", "{6BB0E02B-3C1A-435D-9C74-D23E177E35AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XeroTechnicalTest.Application", "XeroTechnicalTest.Application\XeroTechnicalTest.Application.csproj", "{DE752C50-B088-4FA1-9852-A839F798A654}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductsApi.Application", "ProductsApi.Application\ProductsApi.Application.csproj", "{DE752C50-B088-4FA1-9852-A839F798A654}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XeroTechnicalTest.UnitTests", "XeroTechnicalTest.UnitTests\XeroTechnicalTest.UnitTests.csproj", "{CE11087F-F7B9-491A-8690-E1BC56870D03}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductsApi.UnitTests", "ProductsApi.UnitTests\ProductsApi.UnitTests.csproj", "{CE11087F-F7B9-491A-8690-E1BC56870D03}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

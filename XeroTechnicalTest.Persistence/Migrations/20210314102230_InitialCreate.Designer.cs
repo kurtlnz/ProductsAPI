@@ -9,7 +9,7 @@ using XeroTechnicalTest.Domain;
 namespace XeroTechnicalTest.Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210304085001_InitialCreate")]
+    [Migration("20210314102230_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,7 +34,9 @@ namespace XeroTechnicalTest.Persistence.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
-                        .HasColumnType("TEXT");
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(20);
 
                     b.Property<decimal>("Price")
                         .HasColumnType("TEXT");
@@ -60,7 +62,8 @@ namespace XeroTechnicalTest.Persistence.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(20);
 
                     b.Property<Guid>("ProductId")
                         .HasColumnType("TEXT");
@@ -70,7 +73,18 @@ namespace XeroTechnicalTest.Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ProductId");
+
                     b.ToTable("ProductOptions");
+                });
+
+            modelBuilder.Entity("XeroTechnicalTest.Domain.Models.ProductOption", b =>
+                {
+                    b.HasOne("XeroTechnicalTest.Domain.Models.Product", "Product")
+                        .WithMany("ProductOptions")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

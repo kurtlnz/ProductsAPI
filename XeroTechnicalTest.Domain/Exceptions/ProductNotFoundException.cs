@@ -2,7 +2,7 @@ using System;
 
 namespace XeroTechnicalTest.Domain.Exceptions
 {
-    public class ProductNotFoundException : Exception
+    public class ProductNotFoundException : ObjectNotFoundException
     {
         public ProductNotFoundException()
         {

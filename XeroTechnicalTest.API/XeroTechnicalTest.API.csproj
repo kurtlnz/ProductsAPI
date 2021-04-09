@@ -22,7 +22,6 @@
     <ItemGroup>
       <ProjectReference Include="..\XeroTechnicalTest.Application\XeroTechnicalTest.Application.csproj" />
       <ProjectReference Include="..\XeroTechnicalTest.Domain\XeroTechnicalTest.Domain.csproj" />
-      <ProjectReference Include="..\XeroTechnicalTest.Persistence\XeroTechnicalTest.Persistence.csproj" />
     </ItemGroup>
 
     <ItemGroup>

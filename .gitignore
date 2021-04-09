@@ -4,3 +4,10 @@ bin
 obj
 packages
 .idea
+XeroTechnicalTest.API/App_Data/products.db
+
+XeroTechnicalTest.API/App_Data/products.db-shm
+
+*.db
+
+*.db-wal

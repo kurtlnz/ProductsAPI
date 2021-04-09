@@ -3,7 +3,7 @@ using XeroTechnicalTest.Filters;
 
 namespace XeroTechnicalTest.Controllers
 {
-    [TypeFilter(typeof(UnhandledExceptionFilter))]
+    [TypeFilter(typeof(ApiExceptionFilter))]
     public class ApiController : ControllerBase
     {
         

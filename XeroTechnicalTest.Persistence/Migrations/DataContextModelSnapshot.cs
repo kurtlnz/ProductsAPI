@@ -32,7 +32,9 @@ namespace XeroTechnicalTest.Persistence.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
-                        .HasColumnType("TEXT");
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(20);
 
                     b.Property<decimal>("Price")
                         .HasColumnType("TEXT");
@@ -58,7 +60,8 @@ namespace XeroTechnicalTest.Persistence.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(20);
 
                     b.Property<Guid>("ProductId")
                         .HasColumnType("TEXT");
@@ -68,7 +71,18 @@ namespace XeroTechnicalTest.Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ProductId");
+
                     b.ToTable("ProductOptions");
+                });
+
+            modelBuilder.Entity("XeroTechnicalTest.Domain.Models.ProductOption", b =>
+                {
+                    b.HasOne("XeroTechnicalTest.Domain.Models.Product", "Product")
+                        .WithMany("ProductOptions")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

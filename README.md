@@ -1,4 +1,4 @@
-# Xero Products API - V2
+# Products API - V2
 
 The challenge was to evaluate and re-factor an existing .NET Web API for managing products and their options in C#. 
 
@@ -21,7 +21,7 @@ provides an interface for easier mocking of the DAL in unit tests.
 
 ## Running the API:
 
-1. cd XeroTechnicalTest.API project
+1. cd ProductsApi.Web project
 3. Execute `dotnet run`
 
 The API should now be running
@@ -34,7 +34,7 @@ The API should now be running
 ## Database
 
 - Sqlite
-- Location: XeroTechnicalTest.API/App_Data/products.db
+- Location: ProductsApi.Web/App_Data/products.db
 
 Generating an empty database from the solution root: 
 ```
